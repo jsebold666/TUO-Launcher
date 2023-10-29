@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -57,6 +58,31 @@ namespace TazUO_Launcher.Windows
                         }
 
                         selectedProfile.Save();
+                    }
+                }
+            };
+
+            PluginListButtonAdd.Click += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+                    string path = AskForFile("", "Assistants (*.exe, *.dll)|*.exe;*.dll");
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        EntryPluginList.Items.Add(new ListBoxItem() { Content = path });
+                        SavePluginList();
+                    }
+                }
+            };
+
+            PluginListButtonRemove.Click += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+                    if (EntryPluginList.SelectedIndex > -1)
+                    {
+                        EntryPluginList.Items.RemoveAt(EntryPluginList.SelectedIndex);
+                        SavePluginList();
                     }
                 }
             };
@@ -199,6 +225,22 @@ namespace TazUO_Launcher.Windows
             };
         }
 
+        private void SavePluginList()
+        {
+            if (selectedProfile != null)
+            {
+                List<string> list = new List<string>();
+
+                foreach (var entry in EntryPluginList.Items)
+                {
+                    list.Add(((ListBoxItem)entry).Content.ToString());
+                }
+
+                selectedProfile.CUOSettings.Plugins = list.ToArray();
+                selectedProfile.Save();
+            }
+        }
+
         private void SetEntries(Profile profile)
         {
             EntryProfileName.Text = profile.Name;
@@ -213,6 +255,12 @@ namespace TazUO_Launcher.Windows
             EntryUODirectory.Text = profile.CUOSettings.UltimaOnlineDirectory;
             EntryClientVersion.Text = profile.CUOSettings.ClientVersion;
             EntryEncrypedClient.IsChecked = profile.CUOSettings.Encryption == 0 ? false : true;
+
+            EntryPluginList.Items.Clear();
+            foreach (var entry in profile.CUOSettings.Plugins)
+            {
+                EntryPluginList.Items.Add(new ListBoxItem() { Content = entry });
+            }
         }
 
         private void ProfileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -252,7 +300,6 @@ namespace TazUO_Launcher.Windows
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = intialDirectory;
             openFileDialog.Filter = fileFilter;
-            openFileDialog.Title = "Locate your UO directory";
             openFileDialog.CheckFileExists = true;
             openFileDialog.CheckPathExists = true;
 

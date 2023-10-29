@@ -2,18 +2,37 @@
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using static System.Net.Mime.MediaTypeNames;
+using System.Text.RegularExpressions;
 
 namespace TazUO_Launcher
 {
     class Profile
     {
+        [JsonIgnore]
+        private Settings cUOSettings;
+
         public string Name { get; set; } = "Blank Profile";
         public string SettingsFile { get; set; } = Guid.NewGuid().ToString();
 
         [JsonIgnore]
-        public Settings CUOSettings { get; set; }
+        public Settings CUOSettings
+        {
+            get
+            {
+                if (cUOSettings == null)
+                {
+                    LoadCUOSettings();
+                    return cUOSettings;
+                }
+                else
+                { 
+                    return cUOSettings; }
+            }
+            private set => cUOSettings = value;
+        }
 
-        public Profile()
+        private void LoadCUOSettings()
         {
             if (File.Exists(GetSettingsFilePath()))
             {
@@ -29,7 +48,11 @@ namespace TazUO_Launcher
                         CUOSettings = new Settings();
                     }
                 }
-                catch { CUOSettings = new Settings(); }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                    CUOSettings = new Settings();
+                }
             }
             else
             {

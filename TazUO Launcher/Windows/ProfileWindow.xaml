@@ -85,6 +85,22 @@
                 </TabItem>
 
                 <TabItem Header="Plugins">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition Height="4*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="PluginListButtonAdd" Margin="5, 5, 5, 5">Add</Button>
+                        <Button x:Name="PluginListButtonRemove" Margin="5, 5, 5, 5" Grid.Column="1">Remove</Button>
+                        
+                        <ListBox x:Name="EntryPluginList" Foreground="White" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="#202020" BorderThickness="5">
+                        </ListBox>
+                    </Grid>
 
                 </TabItem>
 
