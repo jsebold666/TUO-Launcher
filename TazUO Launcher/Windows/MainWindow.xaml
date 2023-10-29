@@ -17,22 +17,15 @@
         ResizeMode="NoResize"
         Title="TazUO Launcher" Height="450" Width="800">
     <Canvas>
-        <Image Source="/Untitled_Artwork (3).png" Height="450" Width="800" Canvas.Left="-1" Canvas.Top="-16" />
-
-
-        <Image Source="/menu.png" Height="40" Width="40" Canvas.Left="740" Canvas.Top="10">
-            <Image.Effect>
-                <DropShadowEffect/>
-            </Image.Effect>
-        </Image>
+        <Image Source="/Untitled_Artwork (3).png" Height="450" Width="800" Canvas.Left="-1" Canvas.Top="-16"/>
 
         <Rectangle 
             RadiusX="20"        
             RadiusY="20"         
             Width="200"           
             Height="200"
-            Canvas.Left="50" 
-            Canvas.Top="50"
+            Canvas.Left="129" 
+            Canvas.Top="46"
             >
             <Rectangle.Effect>
                 <DropShadowEffect/>
@@ -49,16 +42,16 @@
                   Background="#202020" 
                   materialDesign:TextFieldAssist.UnderlineBrush="DarkOrange" 
                   BorderBrush="DarkOrange" 
-                  Canvas.Left="50"
+                  Canvas.Left="129"
                   Canvas.Top="275" 
                   MaxWidth="200"
                   Width="200"
                   >
         </ComboBox>
 
-        <Image Source="/menu.png" Width="30" Height="30" Canvas.Left="255" Canvas.Top="271" MouseUp="ProfileSettingsButtonMouseUp">
+        <Image Source="/menu2.png" ToolTip="Open profile settings" Width="30" Height="30" Canvas.Left="334" Canvas.Top="271" MouseUp="ProfileSettingsButtonMouseUp">
             <Image.Effect>
-                <DropShadowEffect/>
+                <DropShadowEffect></DropShadowEffect>
             </Image.Effect>
         </Image>
 
