@@ -57,12 +57,12 @@ namespace TazUO_Launcher
             }
         }
 
-        private string GetSettingsFilePath()
+        public string GetSettingsFilePath()
         {
             return Path.Combine(LauncherSettings.SettingsPath, SettingsFile + ".json");
         }
 
-        private string GetProfileFilePath()
+        public string GetProfileFilePath()
         {
             return Path.Combine(LauncherSettings.ProfilesPath, Name + ".json");
         }

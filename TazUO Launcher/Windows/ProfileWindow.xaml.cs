@@ -1,7 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.Win32;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using TazUO_Launcher.Utility;
 
 namespace TazUO_Launcher.Windows
 {
@@ -28,11 +33,170 @@ namespace TazUO_Launcher.Windows
                 ProfileList.Items.Add(new ListBoxItem() { Content = profile.Name });
             }
 
-            ButtonNew.MouseUp += ButtonNew_MouseUp;
-            ButtonDelete.MouseUp += ButtonDelete_MouseUp;
-            ButtonCopy.MouseUp += ButtonCopy_MouseUp;
+            ButtonNew.Click += ButtonNew_MouseUp;
+            ButtonDelete.Click += ButtonDelete_MouseUp;
+            ButtonCopy.Click += ButtonCopy_MouseUp;
 
             ProfileList.SelectionChanged += ProfileList_SelectionChanged;
+
+            LocateUOButton.Click += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+
+                    string selectDir = AskForFile(EntryUODirectory.Text, "UO Client (*.exe)|*.exe");
+                    if (!string.IsNullOrEmpty(selectDir))
+                    {
+                        EntryUODirectory.Text = Path.GetDirectoryName(selectDir);
+                        selectedProfile.CUOSettings.UltimaOnlineDirectory = EntryUODirectory.Text;
+
+                        if (ClientVersionHelper.TryParseFromFile(Path.Combine(selectedProfile.CUOSettings.UltimaOnlineDirectory, "client.exe"), out string version))
+                        {
+                            EntryClientVersion.Text = version;
+                            selectedProfile.CUOSettings.ClientVersion = version;
+                        }
+
+                        selectedProfile.Save();
+                    }
+                }
+            };
+
+            SetUpSaveMethods();
+        }
+
+        private void SetUpSaveMethods()
+        {
+            EntryProfileName.LostFocus += (s, e) =>
+            {
+                if (selectedProfile != null && !EntryProfileName.Text.Equals(selectedProfile.Name) && EntryProfileName.Text == "")
+                {
+                    ProfileManager.DeleteProfileFile(selectedProfile);
+                    selectedProfile.Name = EntryProfileName.Text;
+                    selectedProfile.Save();
+                    ((ListBoxItem)ProfileList.SelectedItem).Content = selectedProfile.Name;
+                }
+            };
+
+            EntryAccountName.LostFocus += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+                    if (!selectedProfile.CUOSettings.Username.Equals(EntryAccountName.Text))
+                    {
+                        selectedProfile.CUOSettings.Username = EntryAccountName.Text;
+                        selectedProfile.Save();
+                    }
+                }
+            };
+            EntryAccountPass.LostFocus += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+                    if (!selectedProfile.CUOSettings.Password.Equals(EntryAccountPass.Text))
+                    {
+                        selectedProfile.CUOSettings.Password = EntryAccountPass.Text;
+                        selectedProfile.Save();
+                    }
+                }
+            };
+            EntrySavePass.MouseUp += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+                    if (!selectedProfile.CUOSettings.SaveAccount.Equals(EntrySavePass.IsChecked))
+                    {
+                        selectedProfile.CUOSettings.SaveAccount = (bool)(EntrySavePass.IsChecked == null ? false : EntrySavePass.IsChecked);
+                        selectedProfile.Save();
+                    }
+                }
+            };
+
+            EntryServerIP.LostFocus += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+                    if (!selectedProfile.CUOSettings.IP.Equals(EntryServerIP.Text))
+                    {
+                        selectedProfile.CUOSettings.IP = EntryServerIP.Text;
+                        selectedProfile.Save();
+                    }
+                }
+            };
+            EntryServerPort.LostFocus += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+                    if (!selectedProfile.CUOSettings.Port.ToString().Equals(EntryServerPort.Text))
+                    {
+                        if (ushort.TryParse(EntryServerPort.Text, out var port))
+                        {
+                            selectedProfile.CUOSettings.Port = port;
+                            selectedProfile.Save();
+                        }
+                    }
+                }
+            };
+
+            EntryUODirectory.LostFocus += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+                    if (!selectedProfile.CUOSettings.UltimaOnlineDirectory.Equals(EntryUODirectory.Text))
+                    {
+                        selectedProfile.CUOSettings.UltimaOnlineDirectory = EntryUODirectory.Text;
+
+                        if (ClientVersionHelper.TryParseFromFile(Path.Combine(selectedProfile.CUOSettings.UltimaOnlineDirectory, "client.exe"), out string version))
+                        {
+                            EntryClientVersion.Text = version;
+                            selectedProfile.CUOSettings.ClientVersion = version;
+                        }
+
+                        selectedProfile.Save();
+                    }
+                }
+            };
+            EntryClientVersion.LostFocus += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+                    if (!selectedProfile.CUOSettings.ClientVersion.Equals(EntryClientVersion.Text))
+                    {
+                        selectedProfile.CUOSettings.ClientVersion = EntryClientVersion.Text;
+                        selectedProfile.Save();
+                    }
+                }
+            };
+            EntryClientVersion.TextChanged += (s, e) =>
+            {
+                if (ClientVersionHelper.IsClientVersionValid(EntryClientVersion.Text, out var version))
+                {
+                    EntryClientVersion.BorderBrush = Brushes.DarkGreen;
+                }
+                else
+                {
+                    EntryClientVersion.BorderBrush = Brushes.DarkRed;
+                }
+            };
+            EntryEncrypedClient.MouseUp += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+                    //Need to fix, this will never be true
+                    if (!selectedProfile.CUOSettings.Encryption.Equals(EntryEncrypedClient.IsChecked))
+                    {
+                        if (EntryEncrypedClient.IsChecked != null && (bool)EntryEncrypedClient.IsChecked)
+                        {
+                            selectedProfile.CUOSettings.Encryption = 1;
+                        }
+                        else
+                        {
+                            selectedProfile.CUOSettings.Encryption = 0;
+                        }
+
+                        selectedProfile.Save();
+                    }
+                }
+            };
         }
 
         private void SetEntries(Profile profile)
@@ -53,9 +217,9 @@ namespace TazUO_Launcher.Windows
 
         private void ProfileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(ProfileManager.TryFindProfile(((ListBoxItem)ProfileList.SelectedItem).Content.ToString(), out Profile profile))
+            if (ProfileManager.TryFindProfile(((ListBoxItem)ProfileList.SelectedItem).Content.ToString(), out Profile profile))
             {
-                if(profile != null)
+                if (profile != null)
                 {
                     selectedProfile = profile;
                     SetEntries(profile);
@@ -63,19 +227,45 @@ namespace TazUO_Launcher.Windows
             }
         }
 
-        private void ButtonCopy_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void ButtonCopy_MouseUp(object sender, RoutedEventArgs e)
         {
             throw new System.NotImplementedException();
         }
 
-        private void ButtonDelete_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void ButtonDelete_MouseUp(object sender, RoutedEventArgs e)
         {
             throw new System.NotImplementedException();
         }
 
-        private void ButtonNew_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void ButtonNew_MouseUp(object sender, RoutedEventArgs e)
         {
             throw new System.NotImplementedException();
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e) //Loose focus on textbox
+        {
+            MainCanvas.Focus();
+        }
+
+        private string AskForFile(string intialDirectory, string fileFilter)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = intialDirectory;
+            openFileDialog.Filter = fileFilter;
+            openFileDialog.Title = "Locate your UO directory";
+            openFileDialog.CheckFileExists = true;
+            openFileDialog.CheckPathExists = true;
+
+            var result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                return openFileDialog.FileName;
+            }
+            else
+            {
+                return "";
+            }
+
         }
     }
 }

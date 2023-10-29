@@ -40,7 +40,7 @@ namespace TazUO_Launcher
                         }
                     }
 
-                    if(list.Count == 0)
+                    if (list.Count == 0)
                     {
                         Profile blank = new Profile();
                         blank.Save();
@@ -70,9 +70,9 @@ namespace TazUO_Launcher
             });
         }
 
-        public static bool TryFindProfile(string? name,  out Profile? profile)
+        public static bool TryFindProfile(string? name, out Profile? profile)
         {
-            if(name == null)
+            if (name == null)
             {
                 profile = null;
                 return false;
@@ -81,7 +81,7 @@ namespace TazUO_Launcher
             Task<Profile[]> task = GetAllProfiles();
             task.Wait();
 
-            foreach(Profile p in task.Result)
+            foreach (Profile p in task.Result)
             {
                 if (p.Name.Equals(name))
                 {
@@ -91,6 +91,28 @@ namespace TazUO_Launcher
             }
             profile = null;
             return false;
+        }
+
+        public static void DeleteProfileFile(Profile profile, bool alsoDeleteSettingsFile = false)
+        {
+            try
+            {
+                if (File.Exists(profile.GetProfileFilePath()))
+                {
+                    File.Delete(profile.GetProfileFilePath());
+                }
+
+                if (alsoDeleteSettingsFile && File.Exists(profile.GetSettingsFilePath()))
+                {
+                    File.Delete(profile.GetSettingsFilePath());
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("---- Error deleting profile ---");
+                Console.WriteLine(e.ToString());
+                Console.WriteLine();
+            }
         }
 
         private static string GetFilePathForProfile(Profile profile)

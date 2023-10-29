@@ -15,6 +15,7 @@
     Background="{DynamicResource MaterialDesignDarkBackground}"
     Icon="/taz2.png"
     ResizeMode="NoResize"
+    MouseDown="Window_MouseDown"
     Title="TazUO Launcher Profiles" Height="450" Width="800">
     <Window.Resources>
         <Style TargetType="Label">
@@ -26,7 +27,7 @@
             <Setter Property="Foreground" Value="{DynamicResource SecondaryHueMidBrush}"/>
         </Style>
     </Window.Resources>
-    <Canvas>
+    <Canvas Focusable="True" x:Name="MainCanvas">
         <Button x:Name="ButtonNew" Canvas.Left="10" Canvas.Bottom="360" Width="60">New</Button>
         <Button x:Name="ButtonDelete" Canvas.Left="85" Canvas.Bottom="360" Width="80">Delete</Button>
         <Button x:Name="ButtonCopy" Canvas.Left="180" Canvas.Bottom="360">Copy</Button>
