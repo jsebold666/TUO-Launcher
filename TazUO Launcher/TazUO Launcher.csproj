@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <RootNamespace>TazUO_Launcher</RootNamespace>
     <Nullable>enable</Nullable>
@@ -13,11 +13,17 @@
   <ItemGroup>
     <None Remove="menu.png" />
     <None Remove="taz2.png" />
+    <None Remove="_4629907c-36b4-42de-8e3c-c3554c7a700d.jpeg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="menu.png" />
     <Resource Include="taz2.png" />
+    <Resource Include="_4629907c-36b4-42de-8e3c-c3554c7a700d.jpeg" />
   </ItemGroup>
 
 </Project>

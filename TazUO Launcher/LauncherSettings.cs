@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,5 +18,9 @@ namespace TazUO_Launcher
                 return version == null ? new Version(1, 0, 0) : version;
             }
         }
+
+        public static string LauncherPath { get; set; } = AppDomain.CurrentDomain.BaseDirectory;
+
+        public static string ProfilesPath { get; set; } = Path.Combine(LauncherPath, "Profiles");
     }
 }

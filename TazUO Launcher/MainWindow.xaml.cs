@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,10 +21,25 @@ namespace TazUO_Launcher
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Profile[] allProfiles;
+
         public MainWindow()
         {
+            Task<Profile[]> getProfiles = ProfileManager.GetAllProfiles();
+
             InitializeComponent();
-            Background = new SolidColorBrush(Constants.COLORS.DARK_GRAY);
+
+            if (!getProfiles.IsCompleted) //This should be extremely fast
+            {
+                getProfiles.Wait();
+            }
+
+            allProfiles = getProfiles.Result;
+
+            foreach (Profile profile in allProfiles)
+            {
+                ProfileSelector.Items.Add(new ComboBoxItem() { Content = profile.Name });
+            }
         }
     }
 }
