@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Microsoft.Windows.Themes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -366,7 +367,15 @@ namespace TazUO_Launcher.Windows
 
         private void ButtonCopy_MouseUp(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            if(selectedProfile != null)
+            {
+                Profile copy = new Profile();
+                copy.OverrideSettings(selectedProfile.CUOSettings);
+                copy.Save();
+
+                ProfileList.Items.Add(new ListBoxItem() { Content = copy.Name });
+                ProfileList.SelectedIndex = ProfileList.Items.Count - 1;
+            }
         }
 
         private void ButtonDelete_MouseUp(object sender, RoutedEventArgs e)

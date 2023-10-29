@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
 using System.Text.RegularExpressions;
+using TazUO_Launcher.Utility;
 
 namespace TazUO_Launcher
 {
@@ -12,7 +13,7 @@ namespace TazUO_Launcher
         [JsonIgnore]
         private Settings cUOSettings;
 
-        public string Name { get; set; } = "Blank Profile";
+        public string Name { get; set; } = RandomWord.GenerateName(Random.Shared.Next(5, 20));
         public string SettingsFile { get; set; } = Guid.NewGuid().ToString();
 
         [JsonIgnore]
@@ -58,6 +59,11 @@ namespace TazUO_Launcher
             {
                 CUOSettings = new Settings();
             }
+        }
+
+        public void OverrideSettings(Settings settings)
+        {
+            cUOSettings = settings;
         }
 
         public void Save()
