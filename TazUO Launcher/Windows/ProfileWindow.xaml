@@ -62,7 +62,7 @@
 
                         <Label Grid.Row="1">Account</Label>
                         <TextBox x:Name="EntryAccountName" Grid.Row="1" Grid.Column="1" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></TextBox>
-                        <TextBox x:Name="EntryAccountPass" Grid.Row="1" Grid.Column="2" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></TextBox>
+                        <PasswordBox x:Name="EntryAccountPass" Grid.Row="1" Grid.Column="2" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedPasswordBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></PasswordBox>
                         <CheckBox x:Name="EntrySavePass" Grid.Row="1" Grid.Column="3" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="{DynamicResource SecondaryHueMidBrush}">
                             Save Account
                         </CheckBox>
@@ -80,7 +80,7 @@
                         <CheckBox x:Name="EntryEncrypedClient" Grid.Row="6" Grid.Column="2" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="{DynamicResource SecondaryHueMidBrush}">
                             Use Encryption
                         </CheckBox>
-                        
+
                     </Grid>
                 </TabItem>
 
@@ -97,7 +97,7 @@
 
                         <Button x:Name="PluginListButtonAdd" Margin="5, 5, 5, 5">Add</Button>
                         <Button x:Name="PluginListButtonRemove" Margin="5, 5, 5, 5" Grid.Column="1">Remove</Button>
-                        
+
                         <ListBox x:Name="EntryPluginList" Foreground="White" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="#202020" BorderThickness="5">
                         </ListBox>
                     </Grid>
@@ -105,7 +105,40 @@
                 </TabItem>
 
                 <TabItem Header="Advanced">
-                    <Label>MAss testing</Label>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox x:Name="EntryAutoLogin" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="{DynamicResource SecondaryHueMidBrush}">Auto Login</CheckBox>
+
+                        <CheckBox x:Name="EntryReconnect" Grid.Row="1" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="{DynamicResource SecondaryHueMidBrush}">Auto Reconnect</CheckBox>
+                        <TextBox ToolTip="Time to reconnect in milliseconds." x:Name="EntryReconnectTime" Grid.Row="1" Grid.Column="1" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></TextBox>
+                        <Button Grid.Row="1" Grid.Column="2" Margin="5, 5" Click="ReconnectUP">+</Button>
+                        <Button Grid.Row="1" Grid.Column="3" Margin="5, 5" Click="ReconnectDOWN" >-</Button>
+
+                        <CheckBox x:Name="EntryLoginMusic" Grid.Row="2" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="{DynamicResource SecondaryHueMidBrush}">Music</CheckBox>
+                        <Slider x:Name="EntryMusicVolume" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Center" Minimum="0" Maximum="100">
+                            <Slider.ToolTip>
+                                <ToolTip Content="{Binding RelativeSource={RelativeSource Self},
+                                Path=PlacementTarget.Value}"
+                                ContentStringFormat="Volume: {0:0}" />
+                            </Slider.ToolTip>
+                        </Slider>
+
+                    </Grid>
                 </TabItem>
             </TabControl>
         </Canvas>

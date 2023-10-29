@@ -68,7 +68,7 @@ namespace TazUO_Launcher
                 Directory.CreateDirectory(LauncherSettings.ProfilesPath);
                 File.WriteAllText(GetProfileFilePath(), data);
 
-                var settingsData = JsonSerializer.Serialize(CUOSettings, typeof(Settings));
+                var settingsData = CUOSettings.GetSaveData();
                 Directory.CreateDirectory(LauncherSettings.SettingsPath);
                 File.WriteAllText(GetSettingsFilePath(), settingsData);
             }

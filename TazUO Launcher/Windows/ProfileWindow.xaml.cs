@@ -118,14 +118,14 @@ namespace TazUO_Launcher.Windows
             {
                 if (selectedProfile != null)
                 {
-                    if (!selectedProfile.CUOSettings.Password.Equals(EntryAccountPass.Text))
+                    if (!Crypter.Decrypt(selectedProfile.CUOSettings.Password).Equals(EntryAccountPass.Password))
                     {
-                        selectedProfile.CUOSettings.Password = EntryAccountPass.Text;
+                        selectedProfile.CUOSettings.Password = Crypter.Encrypt(EntryAccountPass.Password);
                         selectedProfile.Save();
                     }
                 }
             };
-            EntrySavePass.MouseUp += (s, e) =>
+            EntrySavePass.Click += (s, e) =>
             {
                 if (selectedProfile != null)
                 {
@@ -203,7 +203,7 @@ namespace TazUO_Launcher.Windows
                     EntryClientVersion.BorderBrush = Brushes.DarkRed;
                 }
             };
-            EntryEncrypedClient.MouseUp += (s, e) =>
+            EntryEncrypedClient.Click += (s, e) =>
             {
                 if (selectedProfile != null)
                 {
@@ -219,6 +219,86 @@ namespace TazUO_Launcher.Windows
                             selectedProfile.CUOSettings.Encryption = 0;
                         }
 
+                        selectedProfile.Save();
+                    }
+                }
+            };
+
+            EntryAutoLogin.Click += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+                    if (!selectedProfile.CUOSettings.AutoLogin.Equals(EntryAutoLogin.IsChecked))
+                    {
+                        if (EntryAutoLogin.IsChecked == true)
+                        {
+                            selectedProfile.CUOSettings.AutoLogin = true;
+                        }
+                        else
+                        {
+                            selectedProfile.CUOSettings.AutoLogin = false;
+                        }
+                        selectedProfile.Save();
+                    }
+                }
+            };
+            EntryReconnect.Click += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+                    if (!selectedProfile.CUOSettings.Reconnect.Equals(EntryReconnect.IsChecked))
+                    {
+                        if (EntryReconnect.IsChecked == true)
+                        {
+                            selectedProfile.CUOSettings.Reconnect = true;
+                        }
+                        else
+                        {
+                            selectedProfile.CUOSettings.Reconnect = false;
+                        }
+                        selectedProfile.Save();
+                    }
+                }
+            };
+            EntryReconnectTime.LostFocus += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+                    if(!selectedProfile.CUOSettings.Reconnect.ToString().Equals(EntryReconnectTime.Text.ToString())) 
+                    {
+                        if(int.TryParse(EntryReconnectTime.Text, out int ms))
+                        {
+                            selectedProfile.CUOSettings.ReconnectTime = ms;
+                            selectedProfile.Save();
+                        }
+                    }
+                }
+            };
+            EntryLoginMusic.Click += (s, e) =>
+            {
+                if (selectedProfile != null)
+                {
+                    if (!selectedProfile.CUOSettings.LoginMusic.Equals(EntryLoginMusic.IsChecked))
+                    {
+                        if (EntryLoginMusic.IsChecked == true)
+                        {
+                            selectedProfile.CUOSettings.LoginMusic = true;
+                        }
+                        else
+                        {
+                            selectedProfile.CUOSettings.LoginMusic = false;
+                        }
+                        selectedProfile.Save();
+                    }
+                }
+            };
+            EntryMusicVolume.ValueChanged += (s, e) => 
+            {
+                if(selectedProfile != null)
+                {
+                    if (!selectedProfile.CUOSettings.LoginMusicVolume.Equals((int)EntryMusicVolume.Value))
+                    {
+                        selectedProfile.CUOSettings.LoginMusicVolume = (int)EntryMusicVolume.Value;
                         selectedProfile.Save();
                     }
                 }
@@ -246,7 +326,7 @@ namespace TazUO_Launcher.Windows
             EntryProfileName.Text = profile.Name;
 
             EntryAccountName.Text = profile.CUOSettings.Username;
-            EntryAccountPass.Text = profile.CUOSettings.Password;
+            EntryAccountPass.Password = profile.CUOSettings.Password;
             EntrySavePass.IsChecked = profile.CUOSettings.SaveAccount;
 
             EntryServerIP.Text = profile.CUOSettings.IP;
@@ -261,6 +341,12 @@ namespace TazUO_Launcher.Windows
             {
                 EntryPluginList.Items.Add(new ListBoxItem() { Content = entry });
             }
+
+            EntryAutoLogin.IsChecked = profile.CUOSettings.AutoLogin;
+            EntryReconnect.IsChecked = profile.CUOSettings.Reconnect;
+            EntryReconnectTime.Text = profile.CUOSettings.ReconnectTime.ToString();
+            EntryLoginMusic.IsChecked = profile.CUOSettings.LoginMusic;
+            EntryMusicVolume.Value = profile.CUOSettings.LoginMusicVolume;
         }
 
         private void ProfileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -313,6 +399,28 @@ namespace TazUO_Launcher.Windows
                 return "";
             }
 
+        }
+
+        private void ReconnectUP(object sender, RoutedEventArgs e)
+        {
+            if(selectedProfile != null && int.TryParse(EntryReconnectTime.Text, out int v))
+            {
+                v += 100;
+                EntryReconnectTime.Text = v.ToString();
+                selectedProfile.CUOSettings.ReconnectTime = v;
+                selectedProfile.Save();
+            }
+        }
+
+        private void ReconnectDOWN(object sender, RoutedEventArgs e)
+        {
+            if (selectedProfile != null && int.TryParse(EntryReconnectTime.Text, out int v))
+            {
+                v -= 100;
+                EntryReconnectTime.Text = v.ToString();
+                selectedProfile.CUOSettings.ReconnectTime = v;
+                selectedProfile.Save();
+            }
         }
     }
 }
