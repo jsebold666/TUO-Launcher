@@ -29,12 +29,38 @@ namespace TazUO_Launcher
             {
                 ProfileSelector.Items.Add(new ComboBoxItem() { Content = profile.Name });
             }
+
+            ProfileSelector.SelectedIndex = LauncherSettings.LastSelectedProfileIndex;
+
+            ProfileSelector.SelectionChanged += (s, e) => 
+            {
+                LauncherSettings.LastSelectedProfileIndex = ProfileSelector.SelectedIndex;
+            };
         }
 
         private void ProfileSettingsButtonMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             ProfileWindow profileWindow = new ProfileWindow();
             profileWindow.Show();
+            profileWindow.Closed += (s, e) => {
+                Task<Profile[]> getProfiles = ProfileManager.GetAllProfiles();
+
+                if (!getProfiles.IsCompleted) //This should be extremely fast
+                {
+                    getProfiles.Wait();
+                }
+
+                allProfiles = getProfiles.Result;
+
+                ProfileSelector.Items.Clear();
+
+                foreach (Profile profile in allProfiles)
+                {
+                    ProfileSelector.Items.Add(new ComboBoxItem() { Content = profile.Name });
+                }
+
+                ProfileSelector.SelectedIndex = LauncherSettings.LastSelectedProfileIndex;
+            };
         }
     }
 }

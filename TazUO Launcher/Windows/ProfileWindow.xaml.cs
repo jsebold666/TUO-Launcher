@@ -351,12 +351,15 @@ namespace TazUO_Launcher.Windows
 
         private void ProfileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ProfileManager.TryFindProfile(((ListBoxItem)ProfileList.SelectedItem).Content.ToString(), out Profile profile))
+            if (ProfileList.SelectedIndex > -1)
             {
-                if (profile != null)
+                if (ProfileManager.TryFindProfile(((ListBoxItem)ProfileList.SelectedItem).Content.ToString(), out Profile profile))
                 {
-                    selectedProfile = profile;
-                    SetEntries(profile);
+                    if (profile != null)
+                    {
+                        selectedProfile = profile;
+                        SetEntries(profile);
+                    }
                 }
             }
         }
@@ -368,12 +371,24 @@ namespace TazUO_Launcher.Windows
 
         private void ButtonDelete_MouseUp(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            if (selectedProfile != null)
+            {
+                int indx = ProfileList.SelectedIndex;
+
+                ProfileManager.DeleteProfileFile(selectedProfile, true);
+
+                ProfileList.Items.RemoveAt(indx);
+
+                selectedProfile = null;
+            }
         }
 
         private void ButtonNew_MouseUp(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            Profile profile = new Profile();
+            profile.Save();
+            ProfileList.Items.Add(new ListBoxItem() { Content = profile.Name });
+            ProfileList.SelectedIndex = ProfileList.Items.Count - 1;
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e) //Loose focus on textbox
