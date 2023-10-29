@@ -19,8 +19,12 @@ namespace TazUO_Launcher
             }
         }
 
+        public static string LauncherVersionString => "Launcher Version " + LauncherVersion.ToString();
+
         public static string LauncherPath { get; set; } = AppDomain.CurrentDomain.BaseDirectory;
 
         public static string ProfilesPath { get; set; } = Path.Combine(LauncherPath, "Profiles");
+
+        public static string SettingsPath { get; set; } = Path.Combine(ProfilesPath, "Settings");
     }
 }

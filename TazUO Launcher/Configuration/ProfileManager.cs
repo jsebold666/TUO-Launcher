@@ -43,7 +43,7 @@ namespace TazUO_Launcher
                     if(list.Count == 0)
                     {
                         Profile blank = new Profile();
-                        SaveProfile(blank);
+                        blank.Save();
                         list.Add(blank);
                     }
 
@@ -55,7 +55,7 @@ namespace TazUO_Launcher
                     {
                         Directory.CreateDirectory(LauncherSettings.ProfilesPath);
                         Profile blank = new Profile();
-                        SaveProfile(blank);
+                        blank.Save();
                         return new Profile[] { blank };
 
                     }
@@ -70,18 +70,27 @@ namespace TazUO_Launcher
             });
         }
 
-        public static void SaveProfile(Profile profile)
+        public static bool TryFindProfile(string? name,  out Profile? profile)
         {
-            try
+            if(name == null)
             {
-                var data = JsonSerializer.Serialize(profile);
-                File.WriteAllText(GetFilePathForProfile(profile), data);
-            }catch(Exception e)
-            {
-                Console.WriteLine($"---- Failed to save profile [ {profile.Name} ] ---");
-                Console.WriteLine(e.StackTrace);
-                Console.WriteLine();
+                profile = null;
+                return false;
             }
+
+            Task<Profile[]> task = GetAllProfiles();
+            task.Wait();
+
+            foreach(Profile p in task.Result)
+            {
+                if (p.Name.Equals(name))
+                {
+                    profile = p;
+                    return true;
+                }
+            }
+            profile = null;
+            return false;
         }
 
         private static string GetFilePathForProfile(Profile profile)

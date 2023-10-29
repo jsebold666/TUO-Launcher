@@ -13,6 +13,7 @@
         TextOptions.TextRenderingMode="Auto"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Icon="/taz2.png"
+        ResizeMode="NoResize"
         Title="TazUO Launcher" Height="450" Width="800">
     <Canvas>
         <Image Source="/_4629907c-36b4-42de-8e3c-c3554c7a700d.jpeg" HorizontalAlignment="Center" Height="808" VerticalAlignment="Top" Canvas.Top="-187" />
@@ -54,13 +55,13 @@
                   >
         </ComboBox>
         
-        <Image Source="/menu.png" Width="30" Height="30" Canvas.Left="220" Canvas.Top="271">
+        <Image Source="/menu.png" Width="30" Height="30" Canvas.Left="220" Canvas.Top="271" MouseUp="ProfileSettingsButtonMouseUp">
             <Image.Effect>
                 <DropShadowEffect/>
             </Image.Effect>
         </Image>
 
-        <Label Canvas.Left="10" Canvas.Bottom="10" Content="{x:Static local:LauncherSettings.LauncherVersion}" Foreground="White"></Label>
+        <Label Canvas.Left="10" Canvas.Bottom="10" Content="{x:Static local:LauncherSettings.LauncherVersionString}" Foreground="White"></Label>
 
     </Canvas>
 </Window>
