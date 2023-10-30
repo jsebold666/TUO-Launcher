@@ -16,6 +16,11 @@
         Icon="/taz2.png"
         ResizeMode="NoResize"
         Title="TazUO Launcher" Height="450" Width="800">
+    <Window.Resources>
+        <Style TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="Foreground" Value="Blue" />
+        </Style>
+    </Window.Resources>
     <Canvas>
         <Image Source="/BG.png" Height="450" Width="800" Canvas.Left="-1" Canvas.Top="-16"/>
 
@@ -37,7 +42,6 @@
 
         <ComboBox x:Name="ProfileSelector" 
                   Style="{DynamicResource MaterialDesignComboBox}"
-                  ItemContainerStyle="{DynamicResource MaterialDesignComboBoxItemStyle}"
                   Foreground="DarkOrange" 
                   Background="#202020" 
                   materialDesign:TextFieldAssist.UnderlineBrush="DarkOrange" 
@@ -47,6 +51,7 @@
                   MaxWidth="200"
                   Width="200"
                   >
+
         </ComboBox>
 
         <Image Source="/menu2.png" ToolTip="Open profile settings" Width="30" Height="30" Canvas.Left="94" Canvas.Top="271" MouseUp="ProfileSettingsButtonMouseUp">

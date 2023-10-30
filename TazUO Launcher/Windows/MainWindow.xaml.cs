@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using TazUO_Launcher.Utility;
 using TazUO_Launcher.Windows;
 
@@ -49,7 +50,7 @@ namespace TazUO_Launcher
 
             foreach (Profile profile in allProfiles)
             {
-                ProfileSelector.Items.Add(new ComboBoxItem() { Content = profile.Name });
+                ProfileSelector.Items.Add(new ComboBoxItem() { Content = profile.Name, Foreground = new SolidColorBrush(Color.FromRgb(20, 20, 20)) }) ;
             }
 
             ProfileSelector.SelectedIndex = LauncherSettings.LastSelectedProfileIndex;
@@ -79,7 +80,7 @@ namespace TazUO_Launcher
 
                 foreach (Profile profile in allProfiles)
                 {
-                    ProfileSelector.Items.Add(new ComboBoxItem() { Content = profile.Name });
+                    ProfileSelector.Items.Add(new ComboBoxItem() { Content = profile.Name, Foreground = new SolidColorBrush(Color.FromRgb(20, 20, 20)) });
                 }
 
                 ProfileSelector.SelectedIndex = LauncherSettings.LastSelectedProfileIndex;
