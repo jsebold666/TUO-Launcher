@@ -17,7 +17,7 @@
         ResizeMode="NoResize"
         Title="TazUO Launcher" Height="450" Width="800">
     <Canvas>
-        <Image Source="/Untitled_Artwork (3).png" Height="450" Width="800" Canvas.Left="-1" Canvas.Top="-16"/>
+        <Image Source="/BG.png" Height="450" Width="800" Canvas.Left="-1" Canvas.Top="-16"/>
 
         <Rectangle 
             RadiusX="20"        
@@ -49,11 +49,30 @@
                   >
         </ComboBox>
 
-        <Image Source="/menu2.png" ToolTip="Open profile settings" Width="30" Height="30" Canvas.Left="334" Canvas.Top="271" MouseUp="ProfileSettingsButtonMouseUp">
+        <Image Source="/menu2.png" ToolTip="Open profile settings" Width="30" Height="30" Canvas.Left="94" Canvas.Top="271" MouseUp="ProfileSettingsButtonMouseUp">
             <Image.Effect>
                 <DropShadowEffect></DropShadowEffect>
             </Image.Effect>
         </Image>
+
+        <Image x:Name="PlayButton" Source="/arrow_forward.png" ToolTip="Play!" Canvas.Top="271" Canvas.Left="329">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect ShadowDepth="1"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+
+
+
 
         <Label Canvas.Left="10" Canvas.Bottom="10" Content="{x:Static local:LauncherSettings.LauncherVersionString}" Foreground="White"></Label>
 
