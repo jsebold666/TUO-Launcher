@@ -95,12 +95,15 @@ namespace TazUO_Launcher.Windows
         {
             EntryProfileName.LostFocus += (s, e) =>
             {
-                if (selectedProfile != null && !EntryProfileName.Text.Equals(selectedProfile.Name) && EntryProfileName.Text == "")
+                if (selectedProfile != null && EntryProfileName.Text != "")
                 {
-                    ProfileManager.DeleteProfileFile(selectedProfile);
-                    selectedProfile.Name = EntryProfileName.Text;
-                    selectedProfile.Save();
-                    ((ListBoxItem)ProfileList.SelectedItem).Content = selectedProfile.Name;
+                    if (!selectedProfile.Name.Equals(EntryProfileName.Text))
+                    {
+                        ProfileManager.DeleteProfileFile(selectedProfile);
+                        selectedProfile.Name = EntryProfileName.Text;
+                        selectedProfile.Save();
+                        ((ListBoxItem)ProfileList.SelectedItem).Content = selectedProfile.Name;
+                    }
                 }
             };
 

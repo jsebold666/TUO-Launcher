@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <RootNamespace>TazUO_Launcher</RootNamespace>
     <Nullable>enable</Nullable>
@@ -12,7 +12,8 @@
     <SignAssembly>False</SignAssembly>
     <Title>TazUO Launcher</Title>
     <Authors>$(AssemblyName)</Authors>
-    <NoWin32Manifest>true</NoWin32Manifest>
+    <PublishSingleFile>true</PublishSingleFile>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,6 +32,13 @@
     <Resource Include="menu2.png" />
     <Resource Include="taz2.png" />
     <Resource Include="BG.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

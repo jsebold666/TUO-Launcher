@@ -18,6 +18,11 @@ namespace TazUO_Launcher
         {
             Task<Profile[]> getProfiles = ProfileManager.GetAllProfiles();
 
+            if (!Utility.Utility.FindTazUO())
+            {
+                UpdateManager.Instance.DownloadTUO();
+            }
+
             InitializeComponent();
 
             if (!getProfiles.IsCompleted) //This should be extremely fast
