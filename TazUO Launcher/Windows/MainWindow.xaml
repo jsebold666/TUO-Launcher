@@ -71,10 +71,10 @@
             </Image.Style>
         </Image>
 
+        <Label Visibility="Hidden" Name="DownloadProgressLabel" Foreground="{DynamicResource SecondaryHueMidBrush}" Canvas.Left="159" Canvas.Top="308">Downloading an update..</Label>
+        <ProgressBar Visibility="Hidden" x:Name="DownloadProgressBar" Width="400" Height="15" Canvas.Left="29" Canvas.Top="330" Style="{DynamicResource MaterialDesignLinearProgressBar}" Maximum="100" Value="40"/>
 
-
-
-        <Label Canvas.Left="10" Canvas.Bottom="10" Content="{x:Static local:LauncherSettings.LauncherVersionString}" Foreground="White"></Label>
+        <Label Canvas.Left="10" Canvas.Bottom="10" Content="{x:Static local:LauncherSettings.LauncherVersionString}" Foreground="{DynamicResource SecondaryHueMidBrush}"></Label>
 
     </Canvas>
 </Window>

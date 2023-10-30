@@ -2,7 +2,9 @@
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace TazUO_Launcher.Utility
 {
@@ -14,6 +16,8 @@ namespace TazUO_Launcher.Utility
 
         public bool DownloadInProgress { get; private set; } = false;
 
+        private static Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
+
         public Task DownloadTUO(Action<int>? action = null)
         {
             if (DownloadInProgress)
@@ -23,7 +27,10 @@ namespace TazUO_Launcher.Utility
             var client = new WebClient();
             client.DownloadProgressChanged += (s, p) =>
             {
-                action?.Invoke(p.ProgressPercentage);
+                dispatcher.InvokeAsync(() =>
+                {
+                    action?.Invoke(p.ProgressPercentage);
+                });
             };
 
             Task dl = Task.Factory.StartNew(() =>
@@ -31,12 +38,15 @@ namespace TazUO_Launcher.Utility
                 DownloadInProgress = true;
 
                 string zipPath = System.IO.Path.GetTempFileName();
-                client.DownloadFile(UPDATE_ZIP_URL, zipPath);
-                client = null;
 
-                ZipFile.ExtractToDirectory(zipPath, Path.Combine(LauncherSettings.LauncherPath, "TazUO"));
+                client.DownloadFileAsync(new Uri(UPDATE_ZIP_URL), zipPath);
 
-                DownloadInProgress = false;
+                client.DownloadFileCompleted += (s, p) =>
+                {
+                    ZipFile.ExtractToDirectory(zipPath, Path.Combine(LauncherSettings.LauncherPath, "TazUO"));
+
+                    DownloadInProgress = false;
+                };
             });
 
             return dl;

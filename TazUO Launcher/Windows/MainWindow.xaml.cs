@@ -20,7 +20,22 @@ namespace TazUO_Launcher
 
             if (!Utility.Utility.FindTazUO())
             {
-                UpdateManager.Instance.DownloadTUO();
+                UpdateManager.Instance.DownloadTUO((p) => 
+                {
+                    Console.WriteLine(p.ToString());
+                    if(p > 0)
+                    {
+                        DownloadProgressBar.Value = p;
+                        DownloadProgressBar.Visibility = Visibility.Visible;
+                        DownloadProgressLabel.Visibility = Visibility.Visible;
+                    }
+
+                    if (p >= 100)
+                    {
+                        DownloadProgressBar.Visibility = Visibility.Hidden;
+                        DownloadProgressLabel.Visibility = Visibility.Hidden;
+                    }
+                });
             }
 
             InitializeComponent();
