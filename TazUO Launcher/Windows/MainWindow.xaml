@@ -22,7 +22,7 @@
         </Style>
     </Window.Resources>
     <Canvas>
-        <Image Source="/BG.png" Height="450" Width="800" Canvas.Left="-1" Canvas.Top="-16"/>
+        <Image Source="/BG.png" Height="450" Width="800" Canvas.Right="0" Canvas.Bottom="0"/>
 
         <Rectangle 
             RadiusX="20"        

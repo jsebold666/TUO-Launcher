@@ -19,6 +19,7 @@
   <ItemGroup>
     <None Remove="arrow_forward.png" />
     <None Remove="BG.png" />
+    <None Remove="BG1.png" />
     <None Remove="menu2.png" />
     <None Remove="taz2.png" />
   </ItemGroup>
@@ -29,9 +30,10 @@
 
   <ItemGroup>
     <Resource Include="arrow_forward.png" />
+    <Resource Include="BG.png" />
     <Resource Include="menu2.png" />
     <Resource Include="taz2.png" />
-    <Resource Include="BG.png" />
+    <Resource Include="BG1.png" />
   </ItemGroup>
 
   <ItemGroup>
