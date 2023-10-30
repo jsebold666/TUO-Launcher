@@ -55,7 +55,7 @@
             </Image.Effect>
         </Image>
 
-        <Image x:Name="PlayButton" Source="/arrow_forward.png" ToolTip="Play!" Canvas.Top="271" Canvas.Left="329">
+        <Image x:Name="PlayButton" Source="/arrow_forward.png" ToolTip="Play!" Canvas.Top="271" Canvas.Left="329" MouseUp="PlayButtonMouseUp">
             <Image.Style>
                 <Style TargetType="Image">
                     <Style.Triggers>
