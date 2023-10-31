@@ -14,6 +14,7 @@
     <Authors>$(AssemblyName)</Authors>
     <PublishSingleFile>true</PublishSingleFile>
     <DebugType>embedded</DebugType>
+    <RepositoryUrl>https://github.com/bittiez/TUO-Launcher</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

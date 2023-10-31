@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
@@ -18,38 +21,119 @@ namespace TazUO_Launcher.Utility
 
         private static Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
 
+        private static HttpClient httpClient = new HttpClient();
+
         public Task DownloadTUO(Action<int>? action = null)
         {
             if (DownloadInProgress)
             {
                 return Task.CompletedTask;
             }
-            var client = new WebClient();
-            client.DownloadProgressChanged += (s, p) =>
+
+            httpClient.Timeout = TimeSpan.FromMinutes(5);
+
+            DownloadProgress downloadProgress = new DownloadProgress();
+
+            downloadProgress.DownloadProgressChanged += (s, e) =>
             {
                 dispatcher.InvokeAsync(() =>
                 {
-                    action?.Invoke(p.ProgressPercentage);
+                    action?.Invoke((int)(downloadProgress.ProgressPercentage * 100));
                 });
             };
 
-            Task dl = Task.Factory.StartNew(() =>
+            Task download = Task.Factory.StartNew(() =>
             {
-                DownloadInProgress = true;
-
-                string zipPath = System.IO.Path.GetTempFileName();
-
-                client.DownloadFileAsync(new Uri(UPDATE_ZIP_URL), zipPath);
-
-                client.DownloadFileCompleted += (s, p) =>
+                string tempFilePath = Path.GetTempFileName();
+                using (var file = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
-                    ZipFile.ExtractToDirectory(zipPath, Path.Combine(LauncherSettings.LauncherPath, "TazUO"));
+                    httpClient.DownloadAsync(UPDATE_ZIP_URL, file, downloadProgress).Wait();
+                }
 
-                    DownloadInProgress = false;
-                };
+                try
+                {
+                    ZipFile.ExtractToDirectory(tempFilePath, Path.Combine(LauncherSettings.LauncherPath, "TazUO"));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+
+                DownloadInProgress = false;
+
             });
 
-            return dl;
+            return download;
+        }
+
+        public class DownloadProgress : IProgress<float>
+        {
+            public event EventHandler DownloadProgressChanged;
+
+            public float ProgressPercentage { get; set; }
+
+            public void Report(float value)
+            {
+                ProgressPercentage = value;
+                DownloadProgressChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+    }
+
+    public static class HttpClientExtensions
+    {
+        public static async Task DownloadAsync(this HttpClient client, string requestUri, Stream destination, IProgress<float> progress = null, CancellationToken cancellationToken = default)
+        {
+            // Get the http headers first to examine the content length
+            using (var response = await client.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead))
+            {
+                var contentLength = response.Content.Headers.ContentLength;
+
+                using (var download = await response.Content.ReadAsStreamAsync())
+                {
+
+                    // Ignore progress reporting when no progress reporter was 
+                    // passed or when the content length is unknown
+                    if (progress == null || !contentLength.HasValue)
+                    {
+                        await download.CopyToAsync(destination);
+                        return;
+                    }
+
+                    // Convert absolute progress (bytes downloaded) into relative progress (0% - 100%)
+                    var relativeProgress = new Progress<long>(totalBytes => progress.Report((float)totalBytes / contentLength.Value));
+                    // Use extension method to report progress while downloading
+                    await download.CopyToAsync(destination, 81920, relativeProgress, cancellationToken);
+                    progress.Report(1);
+                }
+            }
+        }
+    }
+
+    public static class StreamExtensions
+    {
+        public static async Task CopyToAsync(this Stream source, Stream destination, int bufferSize, IProgress<long> progress = null, CancellationToken cancellationToken = default)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (!source.CanRead)
+                throw new ArgumentException("Has to be readable", nameof(source));
+            if (destination == null)
+                throw new ArgumentNullException(nameof(destination));
+            if (!destination.CanWrite)
+                throw new ArgumentException("Has to be writable", nameof(destination));
+            if (bufferSize < 0)
+                throw new ArgumentOutOfRangeException(nameof(bufferSize));
+
+            var buffer = new byte[bufferSize];
+            long totalBytesRead = 0;
+            int bytesRead;
+            while ((bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false)) != 0)
+            {
+                await destination.WriteAsync(buffer, 0, bytesRead, cancellationToken).ConfigureAwait(false);
+                totalBytesRead += bytesRead;
+                progress?.Report(totalBytesRead);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,10 +22,10 @@ namespace TazUO_Launcher
 
             if (!Utility.Utility.FindTazUO())
             {
-                UpdateManager.Instance.DownloadTUO((p) => 
+                UpdateManager.Instance.DownloadTUO((p) =>
                 {
                     Console.WriteLine(p.ToString());
-                    if(p > 0)
+                    if (p > 0)
                     {
                         DownloadProgressBar.Value = p;
                         DownloadProgressBar.Visibility = Visibility.Visible;
@@ -50,7 +51,7 @@ namespace TazUO_Launcher
 
             foreach (Profile profile in allProfiles)
             {
-                ProfileSelector.Items.Add(new ComboBoxItem() { Content = profile.Name, Foreground = new SolidColorBrush(Color.FromRgb(20, 20, 20)) }) ;
+                ProfileSelector.Items.Add(new ComboBoxItem() { Content = profile.Name, Foreground = new SolidColorBrush(Color.FromRgb(20, 20, 20)) });
             }
 
             ProfileSelector.SelectedIndex = LauncherSettings.LastSelectedProfileIndex;
@@ -96,12 +97,14 @@ namespace TazUO_Launcher
                 {
                     string tuoExecutable = Utility.Utility.GetTazUOExecutable();
 
-                    if (ProfileManager.TryFindProfile(((ComboBoxItem)ProfileSelector.SelectedItem).Content.ToString(), out Profile? profile)                    )
+                    if (ProfileManager.TryFindProfile(((ComboBoxItem)ProfileSelector.SelectedItem).Content.ToString(), out Profile? profile))
                     {
                         try
                         {
-                            System.Diagnostics.Process.Start(tuoExecutable, $"-settings \"{profile.GetSettingsFilePath()}\"");
-                        } catch(Exception ex)
+                            var proc = new ProcessStartInfo(tuoExecutable, $"-settings \"{profile.GetSettingsFilePath()}\"");
+                            Process.Start(proc);
+                        }
+                        catch (Exception ex)
                         {
                             Console.WriteLine(ex.ToString());
                         }
