@@ -2,8 +2,6 @@
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using static System.Net.Mime.MediaTypeNames;
-using System.Text.RegularExpressions;
 using TazUO_Launcher.Utility;
 
 namespace TazUO_Launcher
@@ -15,6 +13,7 @@ namespace TazUO_Launcher
 
         public string Name { get; set; } = RandomWord.GenerateName(Random.Shared.Next(5, 20));
         public string SettingsFile { get; set; } = Guid.NewGuid().ToString();
+        public string LastCharacterName { get; set; } = string.Empty;
 
         [JsonIgnore]
         public Settings CUOSettings

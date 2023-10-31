@@ -121,6 +121,14 @@ namespace TazUO_Launcher
                         try
                         {
                             var proc = new ProcessStartInfo(tuoExecutable, $"-settings \"{profile.GetSettingsFilePath()}\"");
+                            if(profile.CUOSettings.AutoLogin && !string.IsNullOrEmpty(profile.LastCharacterName))
+                            {
+                                proc.Arguments += $" -lastcharactername {profile.LastCharacterName}";
+                            }
+                            if(profile.CUOSettings.AutoLogin)
+                            {
+                                proc.Arguments += " -skiploginscreen";
+                            }
                             Process.Start(proc);
                         }
                         catch (Exception ex)

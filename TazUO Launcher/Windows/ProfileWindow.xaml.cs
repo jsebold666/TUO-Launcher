@@ -307,6 +307,18 @@ namespace TazUO_Launcher.Windows
                     }
                 }
             };
+
+            EntryLastCharName.LostFocus += (s, e) => 
+            {
+                if(selectedProfile != null)
+                {
+                    if (!EntryLastCharName.Text.Equals(selectedProfile.LastCharacterName))
+                    {
+                        selectedProfile.LastCharacterName = EntryLastCharName.Text;
+                        selectedProfile.Save();
+                    }
+                }
+            };
         }
 
         private void SavePluginList()
@@ -330,7 +342,7 @@ namespace TazUO_Launcher.Windows
             EntryProfileName.Text = profile.Name;
 
             EntryAccountName.Text = profile.CUOSettings.Username;
-            EntryAccountPass.Password = profile.CUOSettings.Password;
+            EntryAccountPass.Password = Crypter.Decrypt(profile.CUOSettings.Password);
             EntrySavePass.IsChecked = profile.CUOSettings.SaveAccount;
 
             EntryServerIP.Text = profile.CUOSettings.IP;
@@ -351,6 +363,8 @@ namespace TazUO_Launcher.Windows
             EntryReconnectTime.Text = profile.CUOSettings.ReconnectTime.ToString();
             EntryLoginMusic.IsChecked = profile.CUOSettings.LoginMusic;
             EntryMusicVolume.Value = profile.CUOSettings.LoginMusicVolume;
+
+            EntryLastCharName.Text = profile.LastCharacterName;
         }
 
         private void ProfileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
