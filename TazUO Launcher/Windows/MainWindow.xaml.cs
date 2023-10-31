@@ -114,5 +114,35 @@ namespace TazUO_Launcher
             }
 
         }
+
+        private void DiscordIconMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var destinationurl = "https://discord.gg/SqwtB5g95H";
+            var sInfo = new System.Diagnostics.ProcessStartInfo(destinationurl)
+            {
+                UseShellExecute = true,
+            };
+            System.Diagnostics.Process.Start(sInfo);
+        }
+
+        private void GithubIconMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var destinationurl = "https://github.com/bittiez/TazUO";
+            var sInfo = new System.Diagnostics.ProcessStartInfo(destinationurl)
+            {
+                UseShellExecute = true,
+            };
+            System.Diagnostics.Process.Start(sInfo);
+        }
+
+        private void WikiMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var destinationurl = "https://github.com/bittiez/TazUO/wiki";
+            var sInfo = new System.Diagnostics.ProcessStartInfo(destinationurl)
+            {
+                UseShellExecute = true,
+            };
+            System.Diagnostics.Process.Start(sInfo);
+        }
     }
 }

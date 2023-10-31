@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TazUO_Launcher"
         mc:Ignorable="d"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:materialIcons="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -54,20 +54,52 @@
 
         </ComboBox>
 
-        <Image Source="/menu2.png" ToolTip="Open profile settings" Width="30" Height="30" Canvas.Left="94" Canvas.Top="271" MouseUp="ProfileSettingsButtonMouseUp">
-            <Image.Effect>
-                <DropShadowEffect></DropShadowEffect>
-            </Image.Effect>
-        </Image>
+        <materialIcons:MaterialIcon Kind="Settings" Foreground="DarkOrange" Background="Transparent" Canvas.Right="10" Canvas.Top="10" ToolTip="Profiles" MouseUp="ProfileSettingsButtonMouseUp">
+            <materialIcons:MaterialIcon.Style>
+                <Style TargetType="materialIcons:MaterialIcon">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect ShadowDepth="2" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </materialIcons:MaterialIcon.Style>
+        </materialIcons:MaterialIcon>
 
-        <Image x:Name="PlayButton" Source="/arrow_forward.png" ToolTip="Play!" Canvas.Top="271" Canvas.Left="329" MouseUp="PlayButtonMouseUp">
+        <materialIcons:MaterialIcon Kind="Login" Foreground="DarkOrange" Background="Transparent" ToolTip="Play!" MouseUp="PlayButtonMouseUp" Canvas.Left="333" Canvas.Top="276">
+            <materialIcons:MaterialIcon.Style>
+                <Style TargetType="materialIcons:MaterialIcon">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect ShadowDepth="2"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </materialIcons:MaterialIcon.Style>
+        </materialIcons:MaterialIcon>
+
+
+        <Label Visibility="Hidden" Name="DownloadProgressLabel" Foreground="{DynamicResource SecondaryHueMidBrush}" Canvas.Left="159" Canvas.Top="308">Downloading an update..</Label>
+        <ProgressBar Visibility="Hidden" x:Name="DownloadProgressBar" Width="400" Height="15" Canvas.Left="29" Canvas.Top="330" Style="{DynamicResource MaterialDesignLinearProgressBar}" Maximum="100" Value="40"/>
+
+        <Label Canvas.Left="10" Canvas.Bottom="10" Content="{x:Static local:LauncherSettings.LauncherVersionString}" Foreground="#707070"></Label>
+
+        <Image Source="/discord-mark-blue.png" Canvas.Right="10" Canvas.Bottom="10" Height="20" ToolTip="Join our discord!" MouseUp="DiscordIconMouseUp">
             <Image.Style>
                 <Style TargetType="Image">
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Effect">
                                 <Setter.Value>
-                                    <DropShadowEffect ShadowDepth="1"/>
+                                    <DropShadowEffect ShadowDepth="2"/>
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
@@ -76,10 +108,37 @@
             </Image.Style>
         </Image>
 
-        <Label Visibility="Hidden" Name="DownloadProgressLabel" Foreground="{DynamicResource SecondaryHueMidBrush}" Canvas.Left="159" Canvas.Top="308">Downloading an update..</Label>
-        <ProgressBar Visibility="Hidden" x:Name="DownloadProgressBar" Width="400" Height="15" Canvas.Left="29" Canvas.Top="330" Style="{DynamicResource MaterialDesignLinearProgressBar}" Maximum="100" Value="40"/>
+        <Image Source="/github-mark.png" Canvas.Right="50" Canvas.Bottom="10" Height="23" ToolTip="Check us out on GitHub" MouseUp="GithubIconMouseUp">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect ShadowDepth="2"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
 
-        <Label Canvas.Left="10" Canvas.Bottom="10" Content="{x:Static local:LauncherSettings.LauncherVersionString}" Foreground="{DynamicResource SecondaryHueMidBrush}"></Label>
+        <materialIcons:MaterialIcon Kind="Library" Foreground="#404040" Background="Transparent" ToolTip="Open our wiki" Canvas.Right="85" Canvas.Bottom="10" MouseUp="WikiMouseUp">
+            <materialIcons:MaterialIcon.Style>
+                <Style TargetType="materialIcons:MaterialIcon">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect ShadowDepth="2"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </materialIcons:MaterialIcon.Style>
+        </materialIcons:MaterialIcon>
 
     </Canvas>
 </Window>

@@ -19,21 +19,22 @@
   <ItemGroup>
     <None Remove="arrow_forward.png" />
     <None Remove="BG.png" />
-    <None Remove="BG1.png" />
-    <None Remove="menu2.png" />
+    <None Remove="discord-mark-blue.png" />
+    <None Remove="github-mark.png" />
     <None Remove="taz2.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Material.Icons.WPF" Version="2.0.0" />
     <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="arrow_forward.png" />
     <Resource Include="BG.png" />
-    <Resource Include="menu2.png" />
+    <Resource Include="discord-mark-blue.png" />
+    <Resource Include="github-mark.png" />
     <Resource Include="taz2.png" />
-    <Resource Include="BG1.png" />
   </ItemGroup>
 
   <ItemGroup>
