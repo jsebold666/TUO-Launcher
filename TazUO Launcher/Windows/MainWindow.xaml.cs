@@ -19,8 +19,9 @@ namespace TazUO_Launcher
         public MainWindow()
         {
             Task<Profile[]> getProfiles = ProfileManager.GetAllProfiles();
+            bool tuoInstalled = Utility.Utility.FindTazUO();
 
-            if (!Utility.Utility.FindTazUO())
+            if (!tuoInstalled)
             {
                 UpdateManager.Instance.DownloadTUO((p) =>
                 {
@@ -38,9 +39,27 @@ namespace TazUO_Launcher
                         DownloadProgressLabel.Visibility = Visibility.Hidden;
                     }
                 });
-            }
+            } //Start downloading TUO if it's not installed.
 
             InitializeComponent();
+
+            UpdateManager.Instance.GetRemoteTazUOVersion(() =>
+            {
+                if (UpdateManager.Instance.RemoteVersion != null)
+                {
+                    RemoteVersionText.Content = $"Latest TazUO version: {UpdateManager.Instance.RemoteVersion.ToString(3)}";
+                    RemoteVersionText.Visibility = Visibility.Visible;
+                }
+            });
+
+            if(tuoInstalled)
+            {
+                Version l = UpdateManager.Instance.GetInstalledTazUOVersion(Utility.Utility.GetTazUOExecutable());
+                if (l != null) {
+                    LocalVersionText.Content = $"Your TazUO version: {l.ToString(3)}";
+                    LocalVersionText.Visibility = Visibility.Visible;
+                }
+            }
 
             if (!getProfiles.IsCompleted) //This should be extremely fast
             {

@@ -90,7 +90,9 @@
         <Label Visibility="Hidden" Name="DownloadProgressLabel" Foreground="{DynamicResource SecondaryHueMidBrush}" Canvas.Left="159" Canvas.Top="308">Downloading an update..</Label>
         <ProgressBar Visibility="Hidden" x:Name="DownloadProgressBar" Width="400" Height="15" Canvas.Left="29" Canvas.Top="330" Style="{DynamicResource MaterialDesignLinearProgressBar}" Maximum="100" Value="40"/>
 
-        <Label Canvas.Left="10" Canvas.Bottom="10" Content="{x:Static local:LauncherSettings.LauncherVersionString}" Foreground="#707070"></Label>
+        <Label Canvas.Left="10" Canvas.Bottom="5" Content="{x:Static local:LauncherSettings.LauncherVersionString}" Foreground="#707070"></Label>
+        <Label Name="RemoteVersionText" Canvas.Left="10" Canvas.Bottom="35" Visibility="Hidden" Foreground="#707070"></Label>
+        <Label Name="LocalVersionText" Canvas.Left="10" Canvas.Bottom="20" Visibility="Hidden" Foreground="#707070"></Label>
 
         <Image Source="/discord-mark-blue.png" Canvas.Right="10" RenderOptions.BitmapScalingMode="HighQuality" Canvas.Bottom="10" Height="20" ToolTip="Join our discord!" MouseUp="DiscordIconMouseUp">
             <Image.Style>

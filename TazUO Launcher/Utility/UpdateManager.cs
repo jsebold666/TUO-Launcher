@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading;
@@ -16,12 +14,12 @@ namespace TazUO_Launcher.Utility
         private const string UPDATE_ZIP_URL = "https://github.com/bittiez/ClassicUO/releases/latest/download/ClassicUO.zip";
 
         public static UpdateManager Instance { get; private set; } = new UpdateManager();
-
         public bool DownloadInProgress { get; private set; } = false;
 
         private static Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
-
         private static HttpClient httpClient = new HttpClient();
+        public Version RemoteVersion { get; private set; } = null;
+        public Version LocalVersion { get; private set; } = null;
 
         public Task DownloadTUO(Action<int>? action = null)
         {
@@ -66,6 +64,35 @@ namespace TazUO_Launcher.Utility
             return download;
         }
 
+        public void GetRemoteTazUOVersion(Action? onVersionFound = null)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                HttpRequestMessage request = new HttpRequestMessage()
+                {
+                    Method = HttpMethod.Get,
+                    RequestUri = new Uri("https://github.com/bittiez/TazUO/raw/main/tazuoversioninfo.txt"),
+                };
+                HttpContent response = httpClient.Send(request).Content;
+                string result = response.ReadAsStringAsync().Result;
+
+                if (Version.TryParse(result, out Version rv))
+                {
+                    RemoteVersion = rv;
+                    dispatcher.InvokeAsync(() =>
+                    {
+                        onVersionFound?.Invoke();
+                    });
+
+                }
+            });
+        }
+
+        public Version? GetInstalledTazUOVersion(string exePath)
+        {
+            return LocalVersion = AssemblyName.GetAssemblyName(exePath).Version;
+        }
+
         public class DownloadProgress : IProgress<float>
         {
             public event EventHandler DownloadProgressChanged;
@@ -78,6 +105,7 @@ namespace TazUO_Launcher.Utility
                 DownloadProgressChanged?.Invoke(this, EventArgs.Empty);
             }
         }
+
     }
 
     public static class HttpClientExtensions
