@@ -92,7 +92,7 @@
 
         <Label Canvas.Left="10" Canvas.Bottom="10" Content="{x:Static local:LauncherSettings.LauncherVersionString}" Foreground="#707070"></Label>
 
-        <Image Source="/discord-mark-blue.png" Canvas.Right="10" Canvas.Bottom="10" Height="20" ToolTip="Join our discord!" MouseUp="DiscordIconMouseUp">
+        <Image Source="/discord-mark-blue.png" Canvas.Right="10" RenderOptions.BitmapScalingMode="HighQuality" Canvas.Bottom="10" Height="20" ToolTip="Join our discord!" MouseUp="DiscordIconMouseUp">
             <Image.Style>
                 <Style TargetType="Image">
                     <Style.Triggers>
@@ -108,7 +108,7 @@
             </Image.Style>
         </Image>
 
-        <Image Source="/github-mark.png" Canvas.Right="50" Canvas.Bottom="10" Height="23" ToolTip="Check us out on GitHub" MouseUp="GithubIconMouseUp">
+        <Image Source="/github-mark.png" Canvas.Right="50" Canvas.Bottom="10" RenderOptions.BitmapScalingMode="HighQuality" Height="23" ToolTip="Check us out on GitHub" MouseUp="GithubIconMouseUp">
             <Image.Style>
                 <Style TargetType="Image">
                     <Style.Triggers>
