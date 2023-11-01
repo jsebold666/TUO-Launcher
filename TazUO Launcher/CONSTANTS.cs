@@ -1,9 +1,12 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Windows.Media;
 
 namespace TazUO_Launcher
 {
     class Constants
     {
+        public static TimeSpan SaveProfileDelay = TimeSpan.FromSeconds(3);
+
         public class COLORS
         {
             public static Color DARK_GRAY = Color.FromArgb(255, 34, 40, 49);

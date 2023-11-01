@@ -1,13 +1,14 @@
 ﻿using Microsoft.Win32;
-using Microsoft.Windows.Themes;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using TazUO_Launcher.Utility;
 
 namespace TazUO_Launcher.Windows
@@ -18,6 +19,7 @@ namespace TazUO_Launcher.Windows
     public partial class ProfileWindow : Window
     {
         private Profile selectedProfile;
+        private Dispatcher dispatcher = Application.Current.Dispatcher;
 
         public ProfileWindow()
         {
@@ -93,7 +95,7 @@ namespace TazUO_Launcher.Windows
 
         private void SetUpSaveMethods()
         {
-            EntryProfileName.LostFocus += (s, e) =>
+            EntryProfileName.TextChanged += (s, e) =>
             {
                 if (selectedProfile != null && EntryProfileName.Text != "")
                 {
@@ -101,31 +103,31 @@ namespace TazUO_Launcher.Windows
                     {
                         ProfileManager.DeleteProfileFile(selectedProfile);
                         selectedProfile.Name = EntryProfileName.Text;
-                        selectedProfile.Save();
+                        selectedProfile.SaveAsync(() => { FlashSaved(EntryProfileName); });
                         ((ListBoxItem)ProfileList.SelectedItem).Content = selectedProfile.Name;
                     }
                 }
             };
 
-            EntryAccountName.LostFocus += (s, e) =>
+            EntryAccountName.TextChanged += (s, e) =>
             {
                 if (selectedProfile != null)
                 {
                     if (!selectedProfile.CUOSettings.Username.Equals(EntryAccountName.Text))
                     {
                         selectedProfile.CUOSettings.Username = EntryAccountName.Text;
-                        selectedProfile.Save();
+                        selectedProfile.SaveAsync(() => { FlashSaved(EntryAccountName); });
                     }
                 }
             };
-            EntryAccountPass.LostFocus += (s, e) =>
+            EntryAccountPass.PasswordChanged += (s, e) =>
             {
                 if (selectedProfile != null)
                 {
                     if (!Crypter.Decrypt(selectedProfile.CUOSettings.Password).Equals(EntryAccountPass.Password))
                     {
                         selectedProfile.CUOSettings.Password = Crypter.Encrypt(EntryAccountPass.Password);
-                        selectedProfile.Save();
+                        selectedProfile.SaveAsync(() => { FlashSaved(EntryAccountPass); });
                     }
                 }
             };
@@ -136,23 +138,23 @@ namespace TazUO_Launcher.Windows
                     if (!selectedProfile.CUOSettings.SaveAccount.Equals(EntrySavePass.IsChecked))
                     {
                         selectedProfile.CUOSettings.SaveAccount = (bool)(EntrySavePass.IsChecked == null ? false : EntrySavePass.IsChecked);
-                        selectedProfile.Save();
+                        selectedProfile.SaveAsync(() => { FlashSaved(EntrySavePass); });
                     }
                 }
             };
 
-            EntryServerIP.LostFocus += (s, e) =>
+            EntryServerIP.TextChanged += (s, e) =>
             {
                 if (selectedProfile != null)
                 {
                     if (!selectedProfile.CUOSettings.IP.Equals(EntryServerIP.Text))
                     {
                         selectedProfile.CUOSettings.IP = EntryServerIP.Text;
-                        selectedProfile.Save();
+                        selectedProfile.SaveAsync(() => { FlashSaved(EntryServerIP); });
                     }
                 }
             };
-            EntryServerPort.LostFocus += (s, e) =>
+            EntryServerPort.TextChanged += (s, e) =>
             {
                 if (selectedProfile != null)
                 {
@@ -161,13 +163,13 @@ namespace TazUO_Launcher.Windows
                         if (ushort.TryParse(EntryServerPort.Text, out var port))
                         {
                             selectedProfile.CUOSettings.Port = port;
-                            selectedProfile.Save();
+                            selectedProfile.SaveAsync(() => { FlashSaved(EntryServerPort); });
                         }
                     }
                 }
             };
 
-            EntryUODirectory.LostFocus += (s, e) =>
+            EntryUODirectory.TextChanged += (s, e) =>
             {
                 if (selectedProfile != null)
                 {
@@ -181,18 +183,18 @@ namespace TazUO_Launcher.Windows
                             selectedProfile.CUOSettings.ClientVersion = version;
                         }
 
-                        selectedProfile.Save();
+                        selectedProfile.SaveAsync(() => { FlashSaved(EntryUODirectory); });
                     }
                 }
             };
-            EntryClientVersion.LostFocus += (s, e) =>
+            EntryClientVersion.TextChanged += (s, e) =>
             {
                 if (selectedProfile != null)
                 {
                     if (!selectedProfile.CUOSettings.ClientVersion.Equals(EntryClientVersion.Text))
                     {
                         selectedProfile.CUOSettings.ClientVersion = EntryClientVersion.Text;
-                        selectedProfile.Save();
+                        selectedProfile.SaveAsync(() => { FlashSaved(EntryClientVersion); });
                     }
                 }
             };
@@ -223,7 +225,7 @@ namespace TazUO_Launcher.Windows
                             selectedProfile.CUOSettings.Encryption = 0;
                         }
 
-                        selectedProfile.Save();
+                        selectedProfile.SaveAsync(() => { FlashSaved(EntryEncrypedClient); });
                     }
                 }
             };
@@ -242,7 +244,7 @@ namespace TazUO_Launcher.Windows
                         {
                             selectedProfile.CUOSettings.AutoLogin = false;
                         }
-                        selectedProfile.Save();
+                        selectedProfile.SaveAsync(() => { FlashSaved(EntryAutoLogin); });
                     }
                 }
             };
@@ -260,20 +262,20 @@ namespace TazUO_Launcher.Windows
                         {
                             selectedProfile.CUOSettings.Reconnect = false;
                         }
-                        selectedProfile.Save();
+                        selectedProfile.SaveAsync(() => { FlashSaved(EntryReconnect); });
                     }
                 }
             };
-            EntryReconnectTime.LostFocus += (s, e) =>
+            EntryReconnectTime.TextChanged += (s, e) =>
             {
                 if (selectedProfile != null)
                 {
-                    if(!selectedProfile.CUOSettings.Reconnect.ToString().Equals(EntryReconnectTime.Text.ToString())) 
+                    if (!selectedProfile.CUOSettings.Reconnect.ToString().Equals(EntryReconnectTime.Text.ToString()))
                     {
-                        if(int.TryParse(EntryReconnectTime.Text, out int ms))
+                        if (int.TryParse(EntryReconnectTime.Text, out int ms))
                         {
                             selectedProfile.CUOSettings.ReconnectTime = ms;
-                            selectedProfile.Save();
+                            selectedProfile.SaveAsync(() => { FlashSaved(EntryReconnectTime); });
                         }
                     }
                 }
@@ -292,33 +294,63 @@ namespace TazUO_Launcher.Windows
                         {
                             selectedProfile.CUOSettings.LoginMusic = false;
                         }
-                        selectedProfile.Save();
+                        selectedProfile.SaveAsync(() => { FlashSaved(EntryLoginMusic); });
                     }
                 }
             };
-            EntryMusicVolume.ValueChanged += (s, e) => 
+            EntryMusicVolume.ValueChanged += (s, e) =>
             {
-                if(selectedProfile != null)
+                if (selectedProfile != null)
                 {
                     if (!selectedProfile.CUOSettings.LoginMusicVolume.Equals((int)EntryMusicVolume.Value))
                     {
                         selectedProfile.CUOSettings.LoginMusicVolume = (int)EntryMusicVolume.Value;
-                        selectedProfile.Save();
+                        selectedProfile.SaveAsync(() => { FlashSaved(EntryMusicVolume); });
                     }
                 }
             };
 
-            EntryLastCharName.LostFocus += (s, e) => 
+            EntryLastCharName.TextChanged += (s, e) =>
             {
-                if(selectedProfile != null)
+                if (selectedProfile != null)
                 {
                     if (!EntryLastCharName.Text.Equals(selectedProfile.LastCharacterName))
                     {
                         selectedProfile.LastCharacterName = EntryLastCharName.Text;
-                        selectedProfile.Save();
+                        selectedProfile.SaveAsync(() => { FlashSaved(EntryLastCharName); });
                     }
                 }
             };
+        }
+
+        /// <summary>
+        /// Do not call in ui thread, this will lock the thread.
+        /// </summary>
+        /// <param name="c"></param>
+        private void FlashSaved(Control c)
+        {
+            if (c != null)
+            {
+                Brush old = c.BorderBrush;
+                var size = c.BorderThickness;
+
+                dispatcher.BeginInvoke(() =>
+                {
+                    c.BorderBrush = Brushes.Green;
+                    c.BorderThickness = new Thickness(2, 2, 2, 2);
+                });
+
+                Task.Factory.StartNew(() =>
+                {
+                    Task.Delay(1000).Wait();
+
+                    dispatcher.BeginInvoke(() =>
+                    {
+                        c.BorderBrush = old;
+                        c.BorderThickness = size;
+                    });
+                });
+            }
         }
 
         private void SavePluginList()
@@ -384,7 +416,7 @@ namespace TazUO_Launcher.Windows
 
         private void ButtonCopy_MouseUp(object sender, RoutedEventArgs e)
         {
-            if(selectedProfile != null)
+            if (selectedProfile != null)
             {
                 Profile copy = new Profile();
                 copy.OverrideSettings(selectedProfile.CUOSettings);
@@ -444,7 +476,7 @@ namespace TazUO_Launcher.Windows
 
         private void ReconnectUP(object sender, RoutedEventArgs e)
         {
-            if(selectedProfile != null && int.TryParse(EntryReconnectTime.Text, out int v))
+            if (selectedProfile != null && int.TryParse(EntryReconnectTime.Text, out int v))
             {
                 v += 100;
                 EntryReconnectTime.Text = v.ToString();
