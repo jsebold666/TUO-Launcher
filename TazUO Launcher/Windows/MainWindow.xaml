@@ -90,8 +90,11 @@
         <Label Visibility="Hidden" Name="DownloadProgressLabel" Foreground="{DynamicResource SecondaryHueMidBrush}" Canvas.Left="159" Canvas.Top="308">Downloading an update..</Label>
         <ProgressBar Visibility="Hidden" x:Name="DownloadProgressBar" Width="400" Height="15" Canvas.Left="29" Canvas.Top="330" Style="{DynamicResource MaterialDesignLinearProgressBar}" Maximum="100" Value="40"/>
 
-        <Rectangle Width="180" Height="60" Canvas.Bottom="5" Canvas.Left="5" Fill="#BF202020"></Rectangle>
+        <Button x:Name="DownloadUpdateButton" Visibility="Hidden" Canvas.Bottom="5" Canvas.Left="195" Height="60" Background="#D8202020" Click="DownloadButtonPressed">
+            <TextBlock TextAlignment="Center">Update available<LineBreak/>Download now</TextBlock>
+        </Button>
         
+        <Rectangle Width="180" Height="60" Canvas.Bottom="5" Canvas.Left="5" Fill="#BF202020"></Rectangle>
         <Label Canvas.Left="10" Canvas.Bottom="5" Content="{x:Static local:LauncherSettings.LauncherVersionString}" Foreground="DarkOrange"></Label>
         <Label Name="RemoteVersionText" Canvas.Left="10" Canvas.Bottom="35" Visibility="Hidden" Foreground="DarkOrange"></Label>
         <Label Name="LocalVersionText" Canvas.Left="10" Canvas.Bottom="20" Visibility="Hidden" Foreground="DarkOrange"></Label>

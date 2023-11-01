@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 using TazUO_Launcher.Utility;
 using TazUO_Launcher.Windows;
 
@@ -15,6 +16,8 @@ namespace TazUO_Launcher
     public partial class MainWindow : Window
     {
         private Profile[] allProfiles;
+        private bool remoteVersionCheck = false, localVersionCheck = false;
+        private Dispatcher dispatcher = Application.Current.Dispatcher;
 
         public MainWindow()
         {
@@ -50,15 +53,12 @@ namespace TazUO_Launcher
                     RemoteVersionText.Content = $"Latest TazUO version: {UpdateManager.Instance.RemoteVersion.ToString(3)}";
                     RemoteVersionText.Visibility = Visibility.Visible;
                 }
+                remoteVersionCheck = true;
             });
 
-            if(tuoInstalled)
+            if (tuoInstalled)
             {
-                Version l = UpdateManager.Instance.GetInstalledTazUOVersion(Utility.Utility.GetTazUOExecutable());
-                if (l != null) {
-                    LocalVersionText.Content = $"Your TazUO version: {l.ToString(3)}";
-                    LocalVersionText.Visibility = Visibility.Visible;
-                }
+                UpdateLocalVersion();
             }
 
             if (!getProfiles.IsCompleted) //This should be extremely fast
@@ -79,6 +79,25 @@ namespace TazUO_Launcher
             {
                 LauncherSettings.LastSelectedProfileIndex = ProfileSelector.SelectedIndex;
             };
+
+            Task.Factory.StartNew(() =>
+            {
+                while (!remoteVersionCheck || !localVersionCheck)
+                {
+                    Task.Delay(1000).Wait();
+                }
+                if (
+                    UpdateManager.Instance.LocalVersion == null ||
+                        (
+                            UpdateManager.Instance.RemoteVersion != null &&
+                            UpdateManager.Instance.LocalVersion != null &&
+                            UpdateManager.Instance.LocalVersion < UpdateManager.Instance.RemoteVersion
+                        )
+                )
+                {
+                    dispatcher.BeginInvoke(() => { DownloadUpdateButton.Visibility = Visibility.Visible; });
+                }
+            });
         }
 
         private void ProfileSettingsButtonMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -112,7 +131,7 @@ namespace TazUO_Launcher
 
             if (Utility.Utility.FindTazUO())
             {
-                if (ProfileSelector.SelectedIndex > -1)
+                if (ProfileSelector.SelectedIndex > -1 && !UpdateManager.Instance.DownloadInProgress)
                 {
                     string tuoExecutable = Utility.Utility.GetTazUOExecutable();
 
@@ -122,11 +141,11 @@ namespace TazUO_Launcher
                         {
                             var proc = new ProcessStartInfo(tuoExecutable, $"-settings \"{profile.GetSettingsFilePath()}\"");
                             proc.Arguments += " -skipupdatecheck";
-                            if(profile.CUOSettings.AutoLogin && !string.IsNullOrEmpty(profile.LastCharacterName))
+                            if (profile.CUOSettings.AutoLogin && !string.IsNullOrEmpty(profile.LastCharacterName))
                             {
                                 proc.Arguments += $" -lastcharactername {profile.LastCharacterName}";
                             }
-                            if(profile.CUOSettings.AutoLogin)
+                            if (profile.CUOSettings.AutoLogin)
                             {
                                 proc.Arguments += " -skiploginscreen";
                             }
@@ -174,6 +193,42 @@ namespace TazUO_Launcher
                 UseShellExecute = true,
             };
             System.Diagnostics.Process.Start(sInfo);
+        }
+
+        private void DownloadButtonPressed(object sender, RoutedEventArgs e)
+        {
+            DownloadUpdateButton.Visibility = Visibility.Hidden;
+
+            UpdateManager.Instance.DownloadTUO((p) =>
+            {
+                Console.WriteLine(p.ToString());
+                if (p > 0 && p < 100)
+                {
+                    DownloadProgressBar.Value = p;
+                    DownloadProgressBar.Visibility = Visibility.Visible;
+                    DownloadProgressLabel.Visibility = Visibility.Visible;
+                }
+
+                if (p == 100)
+                {
+                    DownloadProgressBar.Visibility = Visibility.Hidden;
+                    DownloadProgressLabel.Visibility = Visibility.Hidden;
+                }
+            }, () =>
+            {
+                dispatcher.BeginInvoke(UpdateLocalVersion);
+            });
+        }
+
+        private void UpdateLocalVersion()
+        {
+            Version l = UpdateManager.Instance.GetInstalledTazUOVersion(Utility.Utility.GetTazUOExecutable());
+            if (l != null)
+            {
+                LocalVersionText.Content = $"Your TazUO version: {l.ToString(3)}";
+                LocalVersionText.Visibility = Visibility.Visible;
+            }
+            localVersionCheck = true;
         }
     }
 }

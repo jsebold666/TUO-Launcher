@@ -21,14 +21,12 @@ namespace TazUO_Launcher.Utility
         public Version RemoteVersion { get; private set; } = null;
         public Version LocalVersion { get; private set; } = null;
 
-        public Task DownloadTUO(Action<int>? action = null)
+        public Task DownloadTUO(Action<int>? action = null, Action afterCompleted = null)
         {
             if (DownloadInProgress)
             {
                 return Task.CompletedTask;
             }
-
-            httpClient.Timeout = TimeSpan.FromMinutes(5);
 
             DownloadProgress downloadProgress = new DownloadProgress();
 
@@ -50,13 +48,14 @@ namespace TazUO_Launcher.Utility
 
                 try
                 {
-                    ZipFile.ExtractToDirectory(tempFilePath, Path.Combine(LauncherSettings.LauncherPath, "TazUO"));
+                    ZipFile.ExtractToDirectory(tempFilePath, Path.Combine(LauncherSettings.LauncherPath, "TazUO"), true);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.ToString());
                 }
 
+                afterCompleted?.Invoke();
                 DownloadInProgress = false;
 
             });
