@@ -5,7 +5,7 @@ namespace TazUO_Launcher
 {
     class Constants
     {
-        public static TimeSpan SaveProfileDelay = TimeSpan.FromSeconds(3);
+        public static TimeSpan SaveProfileDelay = TimeSpan.FromSeconds(1);
 
         public class COLORS
         {

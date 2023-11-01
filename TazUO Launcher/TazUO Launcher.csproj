@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <RootNamespace>TazUO_Launcher</RootNamespace>
     <Nullable>enable</Nullable>
@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <None Remove="arrow_forward.png" />
-    <None Remove="BG.png" />
+    <None Remove="BG.jpg" />
     <None Remove="discord-mark-blue.png" />
     <None Remove="github-mark.png" />
     <None Remove="taz2.png" />
@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <Resource Include="arrow_forward.png" />
-    <Resource Include="BG.png" />
+    <Resource Include="BG.jpg" />
     <Resource Include="discord-mark-blue.png" />
     <Resource Include="github-mark.png" />
     <Resource Include="taz2.png" />

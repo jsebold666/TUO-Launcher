@@ -121,6 +121,7 @@ namespace TazUO_Launcher
                         try
                         {
                             var proc = new ProcessStartInfo(tuoExecutable, $"-settings \"{profile.GetSettingsFilePath()}\"");
+                            proc.Arguments += " -skipupdatecheck";
                             if(profile.CUOSettings.AutoLogin && !string.IsNullOrEmpty(profile.LastCharacterName))
                             {
                                 proc.Arguments += $" -lastcharactername {profile.LastCharacterName}";

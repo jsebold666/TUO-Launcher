@@ -5,8 +5,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using TazUO_Launcher.Utility;
+using TazUO_Launcher.Windows;
 
 namespace TazUO_Launcher
 {
@@ -43,6 +45,8 @@ namespace TazUO_Launcher
         private DateTime asyncSaveTime;
         [JsonIgnore]
         private Dispatcher dispatcher = Application.Current.Dispatcher;
+        [JsonIgnore]
+        private List<Control> flashControls = new List<Control>();
 
         private void LoadCUOSettings()
         {
@@ -81,9 +85,14 @@ namespace TazUO_Launcher
         /// Only the first action will be used when the save is finished. All actions in subsequent calls will be ignored.
         /// </summary>
         /// <param name="aftersave"></param>
-        public void SaveAsync(Action aftersave = null)
+        public void SaveAsync(Control flashControl = null)
         {
             asyncSaveTime = DateTime.Now + Constants.SaveProfileDelay;
+
+            if (!flashControls.Contains(flashControl))
+            {
+                flashControls.Add(flashControl);
+            }
 
             if (isAsyncSaveStarted)
             {
@@ -102,10 +111,14 @@ namespace TazUO_Launcher
                 Save();
 
                 isAsyncSaveStarted = false;
-
-                if (aftersave != null)
+                lock (flashControl)
                 {
-                    dispatcher.Invoke(aftersave);
+                    foreach (Control control in flashControls)
+                    {
+                        dispatcher.Invoke(() => { ProfileWindow.FlashSaved(control); });
+                    }
+
+                    flashControls.Clear();
                 }
             });
         }

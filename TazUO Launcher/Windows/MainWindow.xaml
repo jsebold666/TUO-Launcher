@@ -22,7 +22,7 @@
         </Style>
     </Window.Resources>
     <Canvas>
-        <Image Source="/BG.png" Height="450" Width="800" Canvas.Right="0" Canvas.Bottom="0"/>
+        <Image Source="/BG.jpg" Height="450" Width="800" Canvas.Right="0" Canvas.Bottom="0" RenderOptions.BitmapScalingMode="HighQuality"/>
 
         <Rectangle 
             RadiusX="20"        
@@ -90,9 +90,11 @@
         <Label Visibility="Hidden" Name="DownloadProgressLabel" Foreground="{DynamicResource SecondaryHueMidBrush}" Canvas.Left="159" Canvas.Top="308">Downloading an update..</Label>
         <ProgressBar Visibility="Hidden" x:Name="DownloadProgressBar" Width="400" Height="15" Canvas.Left="29" Canvas.Top="330" Style="{DynamicResource MaterialDesignLinearProgressBar}" Maximum="100" Value="40"/>
 
-        <Label Canvas.Left="10" Canvas.Bottom="5" Content="{x:Static local:LauncherSettings.LauncherVersionString}" Foreground="#707070"></Label>
-        <Label Name="RemoteVersionText" Canvas.Left="10" Canvas.Bottom="35" Visibility="Hidden" Foreground="#707070"></Label>
-        <Label Name="LocalVersionText" Canvas.Left="10" Canvas.Bottom="20" Visibility="Hidden" Foreground="#707070"></Label>
+        <Rectangle Width="180" Height="60" Canvas.Bottom="5" Canvas.Left="5" Fill="#BF202020"></Rectangle>
+        
+        <Label Canvas.Left="10" Canvas.Bottom="5" Content="{x:Static local:LauncherSettings.LauncherVersionString}" Foreground="DarkOrange"></Label>
+        <Label Name="RemoteVersionText" Canvas.Left="10" Canvas.Bottom="35" Visibility="Hidden" Foreground="DarkOrange"></Label>
+        <Label Name="LocalVersionText" Canvas.Left="10" Canvas.Bottom="20" Visibility="Hidden" Foreground="DarkOrange"></Label>
 
         <Image Source="/discord-mark-blue.png" Canvas.Right="10" RenderOptions.BitmapScalingMode="HighQuality" Canvas.Bottom="10" Height="20" ToolTip="Join our discord!" MouseUp="DiscordIconMouseUp">
             <Image.Style>
@@ -126,7 +128,7 @@
             </Image.Style>
         </Image>
 
-        <materialIcons:MaterialIcon Kind="Library" Foreground="#404040" Background="Transparent" ToolTip="Open our wiki" Canvas.Right="85" Canvas.Bottom="10" MouseUp="WikiMouseUp">
+        <materialIcons:MaterialIcon Kind="Library" Foreground="#202020" Background="Transparent" ToolTip="Open our wiki" Canvas.Right="85" Canvas.Bottom="10" MouseUp="WikiMouseUp">
             <materialIcons:MaterialIcon.Style>
                 <Style TargetType="materialIcons:MaterialIcon">
                     <Style.Triggers>
