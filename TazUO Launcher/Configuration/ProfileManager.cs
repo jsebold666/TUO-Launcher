@@ -112,10 +112,5 @@ namespace TazUO_Launcher
                 Console.WriteLine();
             }
         }
-
-        private static string GetFilePathForProfile(Profile profile)
-        {
-            return Path.Combine(LauncherSettings.ProfilesPath, profile.Name + ".json");
-        }
     }
 }

@@ -13,7 +13,7 @@
         TextOptions.TextRenderingMode="Auto"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Background="{DynamicResource PrimaryHueDarkBrush}"
-        Icon="/taz2.png"
+        Icon="/Resources/taz2.png"
         ResizeMode="NoResize"
         Title="TazUO Launcher" Height="450" Width="800">
     <Window.Resources>
@@ -22,7 +22,7 @@
         </Style>
     </Window.Resources>
     <Canvas>
-        <Image Source="/BG.jpg" Height="450" Width="800" Canvas.Right="0" Canvas.Bottom="0" RenderOptions.BitmapScalingMode="HighQuality"/>
+        <Image Source="/Resources/BG.jpg" Height="450" Width="800" Canvas.Right="0" Canvas.Bottom="0" RenderOptions.BitmapScalingMode="HighQuality"/>
 
         <Rectangle 
             RadiusX="20"        
@@ -36,7 +36,7 @@
                 <DropShadowEffect/>
             </Rectangle.Effect>
             <Rectangle.Fill>
-                <ImageBrush ImageSource="/taz2.png"/>
+                <ImageBrush ImageSource="/Resources/taz2.png"/>
             </Rectangle.Fill>
         </Rectangle>
 
@@ -99,7 +99,7 @@
         <Label Name="RemoteVersionText" Canvas.Left="10" Canvas.Bottom="35" Visibility="Hidden" Foreground="DarkOrange"></Label>
         <Label Name="LocalVersionText" Canvas.Left="10" Canvas.Bottom="20" Visibility="Hidden" Foreground="DarkOrange"></Label>
 
-        <Image Source="/discord-mark-blue.png" Canvas.Right="10" RenderOptions.BitmapScalingMode="HighQuality" Canvas.Bottom="10" Height="20" ToolTip="Join our discord!" MouseUp="DiscordIconMouseUp">
+        <Image Source="/Resources/discord-mark-blue.png" Canvas.Right="10" RenderOptions.BitmapScalingMode="HighQuality" Canvas.Bottom="10" Height="20" ToolTip="Join our discord!" MouseUp="DiscordIconMouseUp">
             <Image.Style>
                 <Style TargetType="Image">
                     <Style.Triggers>
@@ -115,7 +115,7 @@
             </Image.Style>
         </Image>
 
-        <Image Source="/github-mark.png" Canvas.Right="50" Canvas.Bottom="10" RenderOptions.BitmapScalingMode="HighQuality" Height="23" ToolTip="Check us out on GitHub" MouseUp="GithubIconMouseUp">
+        <Image Source="/Resources/github-mark.png" Canvas.Right="50" Canvas.Bottom="10" RenderOptions.BitmapScalingMode="HighQuality" Height="23" ToolTip="Check us out on GitHub" MouseUp="GithubIconMouseUp">
             <Image.Style>
                 <Style TargetType="Image">
                     <Style.Triggers>

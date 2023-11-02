@@ -44,8 +44,6 @@ namespace TazUO_Launcher
         [JsonIgnore]
         private DateTime asyncSaveTime;
         [JsonIgnore]
-        private Dispatcher dispatcher = Application.Current.Dispatcher;
-        [JsonIgnore]
         private List<Control> flashControls = new List<Control>();
 
         private void LoadCUOSettings()
@@ -115,7 +113,7 @@ namespace TazUO_Launcher
                 {
                     foreach (Control control in flashControls)
                     {
-                        dispatcher.Invoke(() => { ProfileWindow.FlashSaved(control); });
+                        Utility.Utility.UIDispatcher.Invoke(() => { ProfileWindow.FlashSaved(control); });
                     }
 
                     flashControls.Clear();

@@ -1,14 +1,10 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
 using TazUO_Launcher.Utility;
 
 namespace TazUO_Launcher.Windows
@@ -19,7 +15,6 @@ namespace TazUO_Launcher.Windows
     public partial class ProfileWindow : Window
     {
         private Profile selectedProfile;
-        private static Dispatcher dispatcher = Application.Current.Dispatcher;
 
         public ProfileWindow()
         {
@@ -48,7 +43,7 @@ namespace TazUO_Launcher.Windows
                 if (selectedProfile != null)
                 {
 
-                    string selectDir = AskForFile(EntryUODirectory.Text, "UO Client (*.exe)|*.exe");
+                    string selectDir = Utility.Utility.AskForFile(EntryUODirectory.Text, "UO Client (*.exe)|*.exe");
                     if (!string.IsNullOrEmpty(selectDir))
                     {
                         EntryUODirectory.Text = Path.GetDirectoryName(selectDir);
@@ -69,7 +64,7 @@ namespace TazUO_Launcher.Windows
             {
                 if (selectedProfile != null)
                 {
-                    string path = AskForFile("", "Assistants (*.exe, *.dll)|*.exe;*.dll");
+                    string path = Utility.Utility.AskForFile("", "Assistants (*.exe, *.dll)|*.exe;*.dll");
                     if (!string.IsNullOrEmpty(path))
                     {
                         EntryPluginList.Items.Add(new ListBoxItem() { Content = path });
@@ -90,7 +85,7 @@ namespace TazUO_Launcher.Windows
                 }
             };
 
-            PresetServerDropdown.SelectionChanged += (s, e) => 
+            PresetServerDropdown.SelectionChanged += (s, e) =>
             {
                 if (selectedProfile != null)
                 {
@@ -349,7 +344,7 @@ namespace TazUO_Launcher.Windows
                 Brush old = c.BorderBrush;
                 var size = c.BorderThickness;
 
-                dispatcher.BeginInvoke(() =>
+                Utility.Utility.UIDispatcher.BeginInvoke(() =>
                 {
                     c.BorderBrush = Brushes.Green;
                     c.BorderThickness = new Thickness(2, 2, 2, 2);
@@ -359,7 +354,7 @@ namespace TazUO_Launcher.Windows
                 {
                     Task.Delay(1000).Wait();
 
-                    dispatcher.BeginInvoke(() =>
+                    Utility.Utility.UIDispatcher.BeginInvoke(() =>
                     {
                         c.BorderBrush = old;
                         c.BorderThickness = size;
@@ -469,25 +464,7 @@ namespace TazUO_Launcher.Windows
             MainCanvas.Focus();
         }
 
-        private string AskForFile(string intialDirectory, string fileFilter)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = intialDirectory;
-            openFileDialog.Filter = fileFilter;
-            openFileDialog.CheckFileExists = true;
-            openFileDialog.CheckPathExists = true;
 
-            var result = openFileDialog.ShowDialog();
-            if (result == true)
-            {
-                return openFileDialog.FileName;
-            }
-            else
-            {
-                return "";
-            }
-
-        }
 
         private void ReconnectUP(object sender, RoutedEventArgs e)
         {
@@ -496,7 +473,7 @@ namespace TazUO_Launcher.Windows
                 v += 100;
                 EntryReconnectTime.Text = v.ToString();
                 selectedProfile.CUOSettings.ReconnectTime = v;
-                selectedProfile.Save();
+                selectedProfile.SaveAsync(EntryReconnectTime);
             }
         }
 
@@ -507,7 +484,7 @@ namespace TazUO_Launcher.Windows
                 v -= 100;
                 EntryReconnectTime.Text = v.ToString();
                 selectedProfile.CUOSettings.ReconnectTime = v;
-                selectedProfile.Save();
+                selectedProfile.SaveAsync(EntryReconnectTime);
             }
         }
     }

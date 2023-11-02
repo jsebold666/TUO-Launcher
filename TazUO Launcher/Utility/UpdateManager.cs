@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Threading;
 
 namespace TazUO_Launcher.Utility
 {
@@ -15,12 +14,17 @@ namespace TazUO_Launcher.Utility
 
         public static UpdateManager Instance { get; private set; } = new UpdateManager();
         public bool DownloadInProgress { get; private set; } = false;
-
-        private static Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
-        private static HttpClient httpClient = new HttpClient();
         public Version RemoteVersion { get; private set; } = null;
         public Version LocalVersion { get; private set; } = null;
 
+        private static HttpClient httpClient = new HttpClient();
+
+        /// <summary>
+        /// Download the most recent version of TazUO
+        /// </summary>
+        /// <param name="action">This method is called using the ui dispatcher</param>
+        /// <param name="afterCompleted">This method is called on the download thread</param>
+        /// <returns></returns>
         public Task DownloadTUO(Action<int>? action = null, Action afterCompleted = null)
         {
             if (DownloadInProgress)
@@ -32,7 +36,7 @@ namespace TazUO_Launcher.Utility
 
             downloadProgress.DownloadProgressChanged += (s, e) =>
             {
-                dispatcher.InvokeAsync(() =>
+                Utility.UIDispatcher.InvokeAsync(() =>
                 {
                     action?.Invoke((int)(downloadProgress.ProgressPercentage * 100));
                 });
@@ -63,7 +67,7 @@ namespace TazUO_Launcher.Utility
             return download;
         }
 
-        public void GetRemoteTazUOVersion(Action? onVersionFound = null)
+        public void GetRemoteVersionAsync(Action? onVersionFound = null)
         {
             Task.Factory.StartNew(() =>
             {
@@ -78,7 +82,7 @@ namespace TazUO_Launcher.Utility
                 if (Version.TryParse(result, out Version rv))
                 {
                     RemoteVersion = rv;
-                    dispatcher.InvokeAsync(() =>
+                    Utility.UIDispatcher.InvokeAsync(() =>
                     {
                         onVersionFound?.Invoke();
                     });
@@ -87,7 +91,7 @@ namespace TazUO_Launcher.Utility
             });
         }
 
-        public Version? GetInstalledTazUOVersion(string exePath)
+        public Version? GetInstalledVersion(string exePath)
         {
             return LocalVersion = AssemblyName.GetAssemblyName(exePath).Version;
         }
@@ -104,7 +108,6 @@ namespace TazUO_Launcher.Utility
                 DownloadProgressChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-
     }
 
     public static class HttpClientExtensions

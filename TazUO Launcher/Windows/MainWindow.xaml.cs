@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Threading;
 using TazUO_Launcher.Utility;
 using TazUO_Launcher.Windows;
 
@@ -17,7 +16,6 @@ namespace TazUO_Launcher
     {
         private Profile[] allProfiles;
         private bool remoteVersionCheck = false, localVersionCheck = false;
-        private Dispatcher dispatcher = Application.Current.Dispatcher;
 
         public MainWindow()
         {
@@ -26,27 +24,15 @@ namespace TazUO_Launcher
 
             if (!tuoInstalled)
             {
-                UpdateManager.Instance.DownloadTUO((p) =>
+                UpdateManager.Instance.DownloadTUO(OnDownloadProgress, () =>
                 {
-                    Console.WriteLine(p.ToString());
-                    if (p > 0)
-                    {
-                        DownloadProgressBar.Value = p;
-                        DownloadProgressBar.Visibility = Visibility.Visible;
-                        DownloadProgressLabel.Visibility = Visibility.Visible;
-                    }
-
-                    if (p >= 100)
-                    {
-                        DownloadProgressBar.Visibility = Visibility.Hidden;
-                        DownloadProgressLabel.Visibility = Visibility.Hidden;
-                    }
+                    Utility.Utility.UIDispatcher.BeginInvoke(UpdateLocalVersion);
                 });
             } //Start downloading TUO if it's not installed.
 
             InitializeComponent();
 
-            UpdateManager.Instance.GetRemoteTazUOVersion(() =>
+            UpdateManager.Instance.GetRemoteVersionAsync(() =>
             {
                 if (UpdateManager.Instance.RemoteVersion != null)
                 {
@@ -95,7 +81,7 @@ namespace TazUO_Launcher
                         )
                 )
                 {
-                    dispatcher.BeginInvoke(() => { DownloadUpdateButton.Visibility = Visibility.Visible; });
+                    Utility.Utility.UIDispatcher.BeginInvoke(() => { DownloadUpdateButton.Visibility = Visibility.Visible; });
                 }
             });
         }
@@ -199,30 +185,32 @@ namespace TazUO_Launcher
         {
             DownloadUpdateButton.Visibility = Visibility.Hidden;
 
-            UpdateManager.Instance.DownloadTUO((p) =>
+            UpdateManager.Instance.DownloadTUO(OnDownloadProgress, () =>
             {
-                Console.WriteLine(p.ToString());
-                if (p > 0 && p < 100)
-                {
-                    DownloadProgressBar.Value = p;
-                    DownloadProgressBar.Visibility = Visibility.Visible;
-                    DownloadProgressLabel.Visibility = Visibility.Visible;
-                }
-
-                if (p == 100)
-                {
-                    DownloadProgressBar.Visibility = Visibility.Hidden;
-                    DownloadProgressLabel.Visibility = Visibility.Hidden;
-                }
-            }, () =>
-            {
-                dispatcher.BeginInvoke(UpdateLocalVersion);
+                Utility.Utility.UIDispatcher.BeginInvoke(UpdateLocalVersion);
             });
+        }
+
+        private void OnDownloadProgress(int p)
+        {
+            Console.WriteLine(p.ToString());
+            if (p > 0 && p < 100)
+            {
+                DownloadProgressBar.Value = p;
+                DownloadProgressBar.Visibility = Visibility.Visible;
+                DownloadProgressLabel.Visibility = Visibility.Visible;
+            }
+
+            if (p == 100)
+            {
+                DownloadProgressBar.Visibility = Visibility.Hidden;
+                DownloadProgressLabel.Visibility = Visibility.Hidden;
+            }
         }
 
         private void UpdateLocalVersion()
         {
-            Version l = UpdateManager.Instance.GetInstalledTazUOVersion(Utility.Utility.GetTazUOExecutable());
+            Version l = UpdateManager.Instance.GetInstalledVersion(Utility.Utility.GetTazUOExecutable());
             if (l != null)
             {
                 LocalVersionText.Content = $"Your TazUO version: {l.ToString(3)}";
