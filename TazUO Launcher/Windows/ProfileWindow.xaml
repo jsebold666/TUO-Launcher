@@ -67,6 +67,21 @@
                             Save Account
                         </CheckBox>
 
+                        <Label Grid.Row="2">Server Presets</Label>
+                        <ComboBox x:Name="PresetServerDropdown" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" 
+                                  Style="{DynamicResource MaterialDesignComboBox}"
+                                  Foreground="DarkOrange" 
+                                  Background="#202020" 
+                                  materialDesign:TextFieldAssist.UnderlineBrush="DarkOrange" 
+                                  BorderBrush="DarkOrange"
+                                  Margin="5, 5">
+                            <ComboBoxItem Foreground="#202020" Content="EA OSI" Tag="107.23.176.74:7775"/>
+                            <ComboBoxItem Foreground="#202020" Content="UOAlive" Tag="login.uoalive.com:2953"/>
+                            <ComboBoxItem Foreground="#202020" Content="InsaneUO" Tag="login.insaneuo.com:2953"/>
+                            <ComboBoxItem Foreground="#202020" Content="Demise" Tag="login.uogdemise.com:2953"/>
+                            <ComboBoxItem Foreground="#202020" Content="Heritage" Tag="play.trueuo.com:2953"/>
+                        </ComboBox>
+
                         <Label Grid.Row="3">Connection</Label>
                         <TextBox x:Name="EntryServerIP" Grid.Row="3" Grid.Column="1" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></TextBox>
                         <TextBox x:Name="EntryServerPort" Grid.Row="3" Grid.Column="2" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></TextBox>

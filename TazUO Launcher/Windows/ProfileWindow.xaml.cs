@@ -90,6 +90,19 @@ namespace TazUO_Launcher.Windows
                 }
             };
 
+            PresetServerDropdown.SelectionChanged += (s, e) => 
+            {
+                if (selectedProfile != null)
+                {
+                    string serv = (string)((ComboBoxItem)PresetServerDropdown.SelectedItem).Tag;
+                    if (!string.IsNullOrEmpty(serv))
+                    {
+                        EntryServerIP.Text = serv.Split(":")[0];
+                        EntryServerPort.Text = serv.Split(":")[1];
+                    }
+                }
+            };
+
             SetUpSaveMethods();
         }
 
