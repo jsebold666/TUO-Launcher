@@ -50,7 +50,23 @@ namespace TazUO_Launcher.Utility
                 string tempFilePath = Path.GetTempFileName();
                 using (var file = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
-                    httpClient.DownloadAsync(UPDATE_ZIP_URL, file, downloadProgress).Wait();
+                    if (MainReleaseData != null)
+                    {
+                        foreach (GitHubReleaseData.Asset asset in MainReleaseData.assets)
+                        {
+                            if (
+                                asset.name.EndsWith(".zip") &&
+                                (asset.name.StartsWith("ClassicUO") || asset.name.StartsWith("TazUO"))
+                                )
+                            {
+                                httpClient.DownloadAsync(asset.browser_download_url, file, downloadProgress).Wait();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        httpClient.DownloadAsync(UPDATE_ZIP_URL, file, downloadProgress).Wait();
+                    }
                 }
 
                 try
@@ -87,14 +103,14 @@ namespace TazUO_Launcher.Utility
 
                 MainReleaseData = JsonSerializer.Deserialize<GitHubReleaseData>(jsonResponse);
 
-                if(MainReleaseData != null)
+                if (MainReleaseData != null)
                 {
                     if (MainReleaseData.tag_name.StartsWith("v"))
                     {
                         MainReleaseData.tag_name = MainReleaseData.tag_name.Substring(1);
                     }
 
-                    if(Version.TryParse(MainReleaseData.tag_name, out var version))
+                    if (Version.TryParse(MainReleaseData.tag_name, out var version))
                     {
                         RemoteVersion = version;
                         Utility.UIDispatcher.InvokeAsync(() =>

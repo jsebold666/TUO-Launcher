@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 using TazUO_Launcher.Utility;
 using TazUO_Launcher.Windows;
@@ -38,6 +40,17 @@ namespace TazUO_Launcher
                 {
                     RemoteVersionText.Content = $"Latest TazUO version: {UpdateManager.Instance.RemoteVersion.ToString(3)}";
                     RemoteVersionText.Visibility = Visibility.Visible;
+
+                    if(UpdateManager.Instance.MainReleaseData != null)
+                    {
+                        TextBlock tb = new TextBlock();
+                        tb.TextWrapping = TextWrapping.Wrap;
+                        tb.Margin = new Thickness(5, 5, 5, 5);
+                        tb.Text = UpdateManager.Instance.MainReleaseData.tag_name + " notes:\n" + UpdateManager.Instance.MainReleaseData.body;
+                        
+                        NewsArea.Content = tb;
+                        NewsArea.Visibility = Visibility.Visible;
+                    }
                 }
                 remoteVersionCheck = true;
             });

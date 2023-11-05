@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TazUO_Launcher"
+        xmlns:utility="clr-namespace:TazUO_Launcher.Utility"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:materialIcons="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -93,11 +94,15 @@
         <Button x:Name="DownloadUpdateButton" Visibility="Hidden" Canvas.Bottom="5" Canvas.Left="195" Height="60" Background="#D8202020" Click="DownloadButtonPressed">
             <TextBlock TextAlignment="Center">Update available<LineBreak/>Download now</TextBlock>
         </Button>
-        
+
         <Rectangle Width="180" Height="60" Canvas.Bottom="5" Canvas.Left="5" Fill="#BF202020"></Rectangle>
         <Label Canvas.Left="10" Canvas.Bottom="5" Content="{x:Static local:LauncherSettings.LauncherVersionString}" Foreground="DarkOrange"></Label>
         <Label Name="RemoteVersionText" Canvas.Left="10" Canvas.Bottom="35" Visibility="Hidden" Foreground="DarkOrange"></Label>
         <Label Name="LocalVersionText" Canvas.Left="10" Canvas.Bottom="20" Visibility="Hidden" Foreground="DarkOrange"></Label>
+
+        <ScrollViewer Name="NewsArea" Visibility="Hidden" Width="282" Height="254" Background="#BF202020" Foreground="#FFDADADA" Canvas.Left="421" Canvas.Top="46">
+
+        </ScrollViewer>
 
         <Image Source="/Resources/discord-mark-blue.png" Canvas.Right="10" RenderOptions.BitmapScalingMode="HighQuality" Canvas.Bottom="10" Height="20" ToolTip="Join our discord!" MouseUp="DiscordIconMouseUp">
             <Image.Style>
