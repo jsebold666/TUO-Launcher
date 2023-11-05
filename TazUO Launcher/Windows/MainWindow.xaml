@@ -88,8 +88,8 @@
         </materialIcons:MaterialIcon>
 
 
-        <Label Visibility="Hidden" Name="DownloadProgressLabel" Foreground="{DynamicResource SecondaryHueMidBrush}" Canvas.Left="159" Canvas.Top="308">Downloading an update..</Label>
-        <ProgressBar Visibility="Hidden" x:Name="DownloadProgressBar" Width="400" Height="15" Canvas.Left="29" Canvas.Top="330" Style="{DynamicResource MaterialDesignLinearProgressBar}" Maximum="100" Value="40"/>
+        <Label Visibility="Hidden" Name="DownloadProgressLabel" Foreground="{DynamicResource SecondaryHueMidBrush}" Canvas.Left="330" Canvas.Top="303">Downloading an update..</Label>
+        <ProgressBar Visibility="Hidden" x:Name="DownloadProgressBar" Width="400" Height="15" Canvas.Left="200" Canvas.Top="330" Style="{DynamicResource MaterialDesignLinearProgressBar}" Maximum="100"/>
 
         <Button x:Name="DownloadUpdateButton" Visibility="Hidden" Canvas.Bottom="65" Canvas.Left="315" Height="60" Width="150" Background="#D8202020" Click="DownloadButtonPressed">
             <TextBlock TextAlignment="Center">Update available<LineBreak/>Download now</TextBlock>
@@ -121,7 +121,7 @@
             </Label.Style>
             <materialIcons:MaterialIcon Kind="Update"></materialIcons:MaterialIcon>
         </Label>
-        
+
 
         <Image Source="/Resources/discord-mark-blue.png" Canvas.Right="10" RenderOptions.BitmapScalingMode="HighQuality" Canvas.Bottom="10" Height="20" ToolTip="Join our discord!" MouseUp="DiscordIconMouseUp">
             <Image.Style>
