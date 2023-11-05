@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Security.Cryptography.Xml;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -41,15 +42,14 @@ namespace TazUO_Launcher
                     RemoteVersionText.Content = $"Latest TazUO version: {UpdateManager.Instance.RemoteVersion.ToString(3)}";
                     RemoteVersionText.Visibility = Visibility.Visible;
 
-                    if(UpdateManager.Instance.MainReleaseData != null)
+                    if (UpdateManager.Instance.MainReleaseData != null)
                     {
                         TextBlock tb = new TextBlock();
                         tb.TextWrapping = TextWrapping.Wrap;
-                        //tb.Margin = new Thickness(5, 5, 5, 5);
+                        tb.Margin = new Thickness(5, 5, 5, 5);
                         tb.Text = UpdateManager.Instance.MainReleaseData.tag_name + " notes:\n" + UpdateManager.Instance.MainReleaseData.body;
                         
                         NewsArea.Content = tb;
-                        NewsArea.Visibility = Visibility.Visible;
                     }
                 }
                 remoteVersionCheck = true;
@@ -218,6 +218,20 @@ namespace TazUO_Launcher
             {
                 DownloadProgressBar.Visibility = Visibility.Hidden;
                 DownloadProgressLabel.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void ShowNotesButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (NewsArea.Visibility == Visibility.Hidden || NewsArea.Visibility == Visibility.Collapsed)
+            {
+                NewsArea.Visibility = Visibility.Visible;
+                NewsAreaBorder.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                NewsArea.Visibility = Visibility.Collapsed;
+                NewsAreaBorder.Visibility = Visibility.Collapsed;
             }
         }
 

@@ -76,10 +76,10 @@
                                   BorderBrush="DarkOrange"
                                   Margin="5, 5">
                             <ComboBoxItem Foreground="#202020" Content="EA OSI" Tag="107.23.176.74:7775"/>
-                            <ComboBoxItem Foreground="#202020" Content="UOAlive" Tag="login.uoalive.com:2953"/>
-                            <ComboBoxItem Foreground="#202020" Content="InsaneUO" Tag="login.insaneuo.com:2953"/>
-                            <ComboBoxItem Foreground="#202020" Content="Demise" Tag="login.uogdemise.com:2953"/>
-                            <ComboBoxItem Foreground="#202020" Content="Heritage" Tag="play.trueuo.com:2953"/>
+                            <ComboBoxItem Foreground="#202020" Content="UOAlive" Tag="login.uoalive.com:2593"/>
+                            <ComboBoxItem Foreground="#202020" Content="InsaneUO" Tag="login.insaneuo.com:2593"/>
+                            <ComboBoxItem Foreground="#202020" Content="Demise" Tag="login.uogdemise.com:2593"/>
+                            <ComboBoxItem Foreground="#202020" Content="Heritage" Tag="play.trueuo.com:2593"/>
                         </ComboBox>
 
                         <Label Grid.Row="3">Connection</Label>

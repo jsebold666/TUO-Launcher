@@ -16,13 +16,13 @@
         Background="{DynamicResource PrimaryHueDarkBrush}"
         Icon="/Resources/taz2.png"
         ResizeMode="NoResize"
-        Title="TazUO Launcher" Height="450" Width="800">
+        Title="TazUO Launcher" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <Style TargetType="{x:Type ComboBoxItem}">
             <Setter Property="Foreground" Value="Blue" />
         </Style>
     </Window.Resources>
-    <Canvas>
+    <Canvas Width="800" Height="450">
         <Image Source="/Resources/BG.jpg" Height="450" Width="800" Canvas.Right="0" Canvas.Bottom="0" RenderOptions.BitmapScalingMode="HighQuality"/>
 
         <Rectangle 
@@ -30,8 +30,8 @@
             RadiusY="20"         
             Width="200"           
             Height="200"
-            Canvas.Left="129" 
-            Canvas.Top="46"
+            Canvas.Left="300" 
+            Canvas.Top="40"
             >
             <Rectangle.Effect>
                 <DropShadowEffect/>
@@ -47,10 +47,10 @@
                   Background="#202020" 
                   materialDesign:TextFieldAssist.UnderlineBrush="DarkOrange" 
                   BorderBrush="DarkOrange" 
-                  Canvas.Left="129"
-                  Canvas.Top="275" 
-                  MaxWidth="200"
-                  Width="200"
+                  Canvas.Left="300"
+                  Canvas.Top="255" 
+                  MaxWidth="180"
+                  Width="180"
                   >
 
         </ComboBox>
@@ -71,7 +71,7 @@
             </materialIcons:MaterialIcon.Style>
         </materialIcons:MaterialIcon>
 
-        <materialIcons:MaterialIcon Kind="Login" Foreground="DarkOrange" Background="Transparent" ToolTip="Play!" MouseUp="PlayButtonMouseUp" Canvas.Left="333" Canvas.Top="276">
+        <materialIcons:MaterialIcon Kind="Login" Foreground="DarkOrange" Background="Transparent" ToolTip="Play!" MouseUp="PlayButtonMouseUp" Canvas.Left="480" Canvas.Top="254" HorizontalAlignment="Left" VerticalAlignment="Center">
             <materialIcons:MaterialIcon.Style>
                 <Style TargetType="materialIcons:MaterialIcon">
                     <Style.Triggers>
@@ -91,22 +91,37 @@
         <Label Visibility="Hidden" Name="DownloadProgressLabel" Foreground="{DynamicResource SecondaryHueMidBrush}" Canvas.Left="159" Canvas.Top="308">Downloading an update..</Label>
         <ProgressBar Visibility="Hidden" x:Name="DownloadProgressBar" Width="400" Height="15" Canvas.Left="29" Canvas.Top="330" Style="{DynamicResource MaterialDesignLinearProgressBar}" Maximum="100" Value="40"/>
 
-        <Button x:Name="DownloadUpdateButton" Visibility="Hidden" Canvas.Bottom="5" Canvas.Left="195" Height="60" Background="#D8202020" Click="DownloadButtonPressed">
+        <Button x:Name="DownloadUpdateButton" Visibility="Hidden" Canvas.Bottom="65" Canvas.Left="315" Height="60" Width="150" Background="#D8202020" Click="DownloadButtonPressed">
             <TextBlock TextAlignment="Center">Update available<LineBreak/>Download now</TextBlock>
         </Button>
 
-        <Rectangle Width="180" Height="60" Canvas.Bottom="5" Canvas.Left="5" Fill="#BF202020"></Rectangle>
-        <Label Canvas.Left="10" Canvas.Bottom="5" Content="{x:Static local:LauncherSettings.LauncherVersionString}" Foreground="DarkOrange"></Label>
-        <Label Name="RemoteVersionText" Canvas.Left="10" Canvas.Bottom="35" Visibility="Hidden" Foreground="DarkOrange"></Label>
-        <Label Name="LocalVersionText" Canvas.Left="10" Canvas.Bottom="20" Visibility="Hidden" Foreground="DarkOrange"></Label>
+        <Rectangle Name="VersionRectangle" Width="180" Height="55" Canvas.Bottom="5" Canvas.Left="300" Fill="#BF202020"></Rectangle>
+        <Label Canvas.Left="{Binding (Canvas.Left),ElementName=VersionRectangle}" Canvas.Bottom="5" Content="{x:Static local:LauncherSettings.LauncherVersionString}" HorizontalContentAlignment="Center" Width="{Binding (Width),ElementName=VersionRectangle}" Foreground="DarkOrange"></Label>
+        <Label Name="RemoteVersionText" Canvas.Left="{Binding (Canvas.Left),ElementName=VersionRectangle}" Canvas.Bottom="35" HorizontalContentAlignment="Center" Width="{Binding (Width),ElementName=VersionRectangle}"  Visibility="Hidden" Foreground="DarkOrange"></Label>
+        <Label Name="LocalVersionText" Canvas.Left="{Binding (Canvas.Left),ElementName=VersionRectangle}" Canvas.Bottom="20" HorizontalContentAlignment="Center" Width="{Binding (Width),ElementName=VersionRectangle}"  Visibility="Hidden" Foreground="DarkOrange"></Label>
 
-        <ScrollViewer Name="NewsArea" Width="282" Height="254" Background="#F2202020" Foreground="#FFDADADA" Canvas.Left="421" Canvas.Top="46" BorderBrush="#F2202020" BorderThickness="5">
-
+        <ScrollViewer Name="NewsArea" Width="282" Height="400" Background="#F2202020" Foreground="#FFDADADA" Visibility="Collapsed" Canvas.Left="10" Canvas.Top="40">
         </ScrollViewer>
 
+        <Border Name="NewsAreaBorder" Width="292" Height="410" BorderThickness="5, 5, 5, 5" Canvas.Left="5" Visibility="Collapsed" Canvas.Top="35" BorderBrush="#F2101010"/>
 
-        <Border Width="292" Height="264" BorderThickness="5" Canvas.Left="416" Canvas.Top="41" BorderBrush="#BF000000">
-        </Border>
+        <Label Canvas.Top="5" Canvas.Left="5" Foreground="DarkOrange" FontWeight="Bold" ToolTip="Show or hide change log." MouseUp="ShowNotesButtonUp">
+            <Label.Style>
+                <Style TargetType="Label">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect ShadowDepth="2"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Label.Style>
+            <materialIcons:MaterialIcon Kind="Update"></materialIcons:MaterialIcon>
+        </Label>
+        
 
         <Image Source="/Resources/discord-mark-blue.png" Canvas.Right="10" RenderOptions.BitmapScalingMode="HighQuality" Canvas.Bottom="10" Height="20" ToolTip="Join our discord!" MouseUp="DiscordIconMouseUp">
             <Image.Style>
