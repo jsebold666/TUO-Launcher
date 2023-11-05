@@ -3,6 +3,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Net.Http;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,6 +18,7 @@ namespace TazUO_Launcher.Utility
         public bool DownloadInProgress { get; private set; } = false;
         public Version RemoteVersion { get; private set; } = null;
         public Version LocalVersion { get; private set; } = null;
+        public GitHubReleaseData MainReleaseData { get; private set; } = null;
 
         private static HttpClient httpClient = new HttpClient();
 
@@ -71,22 +74,34 @@ namespace TazUO_Launcher.Utility
         {
             Task.Factory.StartNew(() =>
             {
-                HttpRequestMessage request = new HttpRequestMessage()
+                HttpRequestMessage restApi = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Get,
-                    RequestUri = new Uri("https://github.com/bittiez/TazUO/raw/main/tazuoversioninfo.txt"),
+                    RequestUri = new Uri("https://api.github.com/repos/bittiez/TazUO/releases/latest"),
                 };
-                HttpContent response = httpClient.Send(request).Content;
-                string result = response.ReadAsStringAsync().Result;
+                restApi.Headers.Add("X-GitHub-Api-Version", "2022-11-28");
+                restApi.Headers.Add("User-Agent", "Public");
+                string jsonResponse = httpClient.Send(restApi).Content.ReadAsStringAsync().Result;
 
-                if (Version.TryParse(result, out Version rv))
+                Console.WriteLine(jsonResponse);
+
+                MainReleaseData = JsonSerializer.Deserialize<GitHubReleaseData>(jsonResponse);
+
+                if(MainReleaseData != null)
                 {
-                    RemoteVersion = rv;
-                    Utility.UIDispatcher.InvokeAsync(() =>
+                    if (MainReleaseData.tag_name.StartsWith("v"))
                     {
-                        onVersionFound?.Invoke();
-                    });
+                        MainReleaseData.tag_name = MainReleaseData.tag_name.Substring(1);
+                    }
 
+                    if(Version.TryParse(MainReleaseData.tag_name, out var version))
+                    {
+                        RemoteVersion = version;
+                        Utility.UIDispatcher.InvokeAsync(() =>
+                        {
+                            onVersionFound?.Invoke();
+                        });
+                    }
                 }
             });
         }
