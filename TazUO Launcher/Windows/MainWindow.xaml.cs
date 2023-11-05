@@ -45,7 +45,7 @@ namespace TazUO_Launcher
                     {
                         TextBlock tb = new TextBlock();
                         tb.TextWrapping = TextWrapping.Wrap;
-                        tb.Margin = new Thickness(5, 5, 5, 5);
+                        //tb.Margin = new Thickness(5, 5, 5, 5);
                         tb.Text = UpdateManager.Instance.MainReleaseData.tag_name + " notes:\n" + UpdateManager.Instance.MainReleaseData.body;
                         
                         NewsArea.Content = tb;

@@ -100,9 +100,13 @@
         <Label Name="RemoteVersionText" Canvas.Left="10" Canvas.Bottom="35" Visibility="Hidden" Foreground="DarkOrange"></Label>
         <Label Name="LocalVersionText" Canvas.Left="10" Canvas.Bottom="20" Visibility="Hidden" Foreground="DarkOrange"></Label>
 
-        <ScrollViewer Name="NewsArea" Visibility="Hidden" Width="282" Height="254" Background="#BF202020" Foreground="#FFDADADA" Canvas.Left="421" Canvas.Top="46">
+        <ScrollViewer Name="NewsArea" Width="282" Height="254" Background="#F2202020" Foreground="#FFDADADA" Canvas.Left="421" Canvas.Top="46" BorderBrush="#F2202020" BorderThickness="5">
 
         </ScrollViewer>
+
+
+        <Border Width="292" Height="264" BorderThickness="5" Canvas.Left="416" Canvas.Top="41" BorderBrush="#BF000000">
+        </Border>
 
         <Image Source="/Resources/discord-mark-blue.png" Canvas.Right="10" RenderOptions.BitmapScalingMode="HighQuality" Canvas.Bottom="10" Height="20" ToolTip="Join our discord!" MouseUp="DiscordIconMouseUp">
             <Image.Style>
