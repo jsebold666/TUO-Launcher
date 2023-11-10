@@ -19,12 +19,21 @@
     Title="TazUO Launcher Profiles" Height="450" Width="800">
     <Window.Resources>
         <Style TargetType="Label">
-            <Setter Property="Foreground" Value="{DynamicResource SecondaryHueMidBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-        <Style TargetType="CheckBox">
-            <Setter Property="Foreground" Value="{DynamicResource SecondaryHueMidBrush}"/>
+        <Style TargetType="{x:Type CheckBox}">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style x:Key="Placeholder" TargetType="Label">
+            <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="Opacity" Value="0.55"/>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="White"/>
         </Style>
     </Window.Resources>
     <Canvas Focusable="True" x:Name="MainCanvas">
@@ -62,8 +71,11 @@
 
                         <Label Grid.Row="1">Account</Label>
                         <TextBox x:Name="EntryAccountName" Grid.Row="1" Grid.Column="1" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></TextBox>
+                        <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource Placeholder}">Username</Label>
                         <PasswordBox x:Name="EntryAccountPass" Grid.Row="1" Grid.Column="2" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedPasswordBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></PasswordBox>
-                        <CheckBox x:Name="EntrySavePass" Grid.Row="1" Grid.Column="3" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="{DynamicResource SecondaryHueMidBrush}">
+                        <Label Grid.Row="1" Grid.Column="2" Style="{StaticResource Placeholder}">Password</Label>
+
+                        <CheckBox x:Name="EntrySavePass" Grid.Row="1" Grid.Column="3" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="White">
                             Save Account
                         </CheckBox>
 
@@ -84,7 +96,9 @@
 
                         <Label Grid.Row="3">Connection</Label>
                         <TextBox x:Name="EntryServerIP" Grid.Row="3" Grid.Column="1" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></TextBox>
+                        <Label Grid.Row="3" Grid.Column="1" Style="{StaticResource Placeholder}">IP Address</Label>
                         <TextBox x:Name="EntryServerPort" Grid.Row="3" Grid.Column="2" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></TextBox>
+                        <Label Grid.Row="3" Grid.Column="2" Style="{StaticResource Placeholder}">Port</Label>
 
                         <Label Grid.Row="5">UO Directory</Label>
                         <TextBox x:Name="EntryUODirectory" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></TextBox>
@@ -92,7 +106,7 @@
 
                         <Label Grid.Row="6">Client Version</Label>
                         <TextBox x:Name="EntryClientVersion" Grid.Row="6" Grid.Column="1" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></TextBox>
-                        <CheckBox x:Name="EntryEncrypedClient" Grid.Row="6" Grid.Column="2" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="{DynamicResource SecondaryHueMidBrush}">
+                        <CheckBox x:Name="EntryEncrypedClient" Grid.Row="6" Grid.Column="2" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="White">
                             Use Encryption
                         </CheckBox>
 
@@ -137,14 +151,14 @@
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
-                        <CheckBox x:Name="EntryAutoLogin" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="{DynamicResource SecondaryHueMidBrush}">Auto Login</CheckBox>
+                        <CheckBox x:Name="EntryAutoLogin" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="White">Auto Login</CheckBox>
 
-                        <CheckBox x:Name="EntryReconnect" Grid.Row="1" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="{DynamicResource SecondaryHueMidBrush}">Auto Reconnect</CheckBox>
+                        <CheckBox x:Name="EntryReconnect" Grid.Row="1" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="White">Auto Reconnect</CheckBox>
                         <TextBox ToolTip="Time to reconnect in milliseconds." x:Name="EntryReconnectTime" Grid.Row="1" Grid.Column="1" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></TextBox>
                         <Button Grid.Row="1" Grid.Column="2" Margin="5, 5" Click="ReconnectUP">+</Button>
                         <Button Grid.Row="1" Grid.Column="3" Margin="5, 5" Click="ReconnectDOWN" >-</Button>
 
-                        <CheckBox x:Name="EntryLoginMusic" Grid.Row="2" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="{DynamicResource SecondaryHueMidBrush}">Music</CheckBox>
+                        <CheckBox x:Name="EntryLoginMusic" Grid.Row="2" Style="{DynamicResource MaterialDesignCheckBox}" Foreground="White">Music</CheckBox>
                         <Slider x:Name="EntryMusicVolume" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Center" Minimum="0" Maximum="100">
                             <Slider.ToolTip>
                                 <ToolTip Content="{Binding RelativeSource={RelativeSource Self},
