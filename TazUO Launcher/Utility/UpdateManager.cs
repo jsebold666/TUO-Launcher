@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net.Http;
@@ -7,6 +8,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace TazUO_Launcher.Utility
 {
@@ -17,8 +19,10 @@ namespace TazUO_Launcher.Utility
         public static UpdateManager Instance { get; private set; } = new UpdateManager();
         public bool DownloadInProgress { get; private set; } = false;
         public Version RemoteVersion { get; private set; } = null;
+        public Version RemoteLauncherVersion { get; private set; } = null;
         public Version LocalVersion { get; private set; } = null;
         public GitHubReleaseData MainReleaseData { get; private set; } = null;
+        public GitHubReleaseData LauncherReleaseData { get; private set; } = null;
 
         private static HttpClient httpClient = new HttpClient();
 
@@ -86,6 +90,66 @@ namespace TazUO_Launcher.Utility
             return download;
         }
 
+        public Task DownloadLauncher(Action<int>? action = null)
+        {
+            if (DownloadInProgress)
+            {
+                return Task.CompletedTask;
+            }
+
+            DownloadProgress downloadProgress = new DownloadProgress();
+
+            downloadProgress.DownloadProgressChanged += (s, e) =>
+            {
+                Utility.UIDispatcher.InvokeAsync(() =>
+                {
+                    action?.Invoke((int)(downloadProgress.ProgressPercentage * 100));
+                });
+            };
+
+            Task download = Task.Factory.StartNew(() =>
+            {
+                string tempFilePath = Path.Combine(Path.GetTempPath(), "tuo.launcher.zip");
+                using (var file = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    if (LauncherReleaseData != null)
+                    {
+                        foreach (GitHubReleaseData.Asset asset in LauncherReleaseData.assets)
+                        {
+                            if (
+                                asset.name.EndsWith(".zip") &&
+                                (asset.name.StartsWith("Launcher") || asset.name.StartsWith("TazUO"))
+                                )
+                            {
+                                httpClient.DownloadAsync(asset.browser_download_url, file, downloadProgress).Wait();
+
+                                MessageBox.Show(
+                                    "Quick guide:\n" +
+                                    "1. The launcher will now close\n" +
+                                    "2. The launcher folder will open, and the new update zip will open\n" +
+                                    "3. Move the contents of the zip folder to the launcher folder\n" +
+                                    "4. Re-open the launcher!"
+                                    );
+
+                                Process.Start("explorer.exe", System.AppDomain.CurrentDomain.BaseDirectory);
+                                Process.Start("explorer.exe", tempFilePath);
+
+                                Utility.UIDispatcher.BeginInvokeShutdown(System.Windows.Threading.DispatcherPriority.Normal);
+                            }
+                        }
+                    }
+                }
+
+
+
+                DownloadInProgress = false;
+
+            });
+
+            return download;
+        }
+
+
         public void GetRemoteVersionAsync(Action? onVersionFound = null)
         {
             Task.Factory.StartNew(() =>
@@ -113,6 +177,42 @@ namespace TazUO_Launcher.Utility
                     if (Version.TryParse(MainReleaseData.tag_name, out var version))
                     {
                         RemoteVersion = version;
+                        Utility.UIDispatcher.InvokeAsync(() =>
+                        {
+                            onVersionFound?.Invoke();
+                        });
+                    }
+                }
+            });
+        }
+
+        public void GetRemoteLauncherVersionAsync(Action? onVersionFound = null)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                HttpRequestMessage restApi = new HttpRequestMessage()
+                {
+                    Method = HttpMethod.Get,
+                    RequestUri = new Uri("https://api.github.com/repos/bittiez/TUO-Launcher/releases/latest"),
+                };
+                restApi.Headers.Add("X-GitHub-Api-Version", "2022-11-28");
+                restApi.Headers.Add("User-Agent", "Public");
+                string jsonResponse = httpClient.Send(restApi).Content.ReadAsStringAsync().Result;
+
+                Console.WriteLine(jsonResponse);
+
+                LauncherReleaseData = JsonSerializer.Deserialize<GitHubReleaseData>(jsonResponse);
+
+                if (LauncherReleaseData != null)
+                {
+                    if (LauncherReleaseData.tag_name.StartsWith("v"))
+                    {
+                        LauncherReleaseData.tag_name = LauncherReleaseData.tag_name.Substring(1);
+                    }
+
+                    if (Version.TryParse(LauncherReleaseData.tag_name, out var version))
+                    {
+                        RemoteLauncherVersion = version;
                         Utility.UIDispatcher.InvokeAsync(() =>
                         {
                             onVersionFound?.Invoke();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Security.Cryptography.Xml;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -53,6 +54,29 @@ namespace TazUO_Launcher
                     }
                 }
                 remoteVersionCheck = true;
+            });
+
+            UpdateManager.Instance.GetRemoteLauncherVersionAsync(() =>
+            {
+                if(UpdateManager.Instance.LauncherReleaseData != null)
+                {
+                    if(Assembly.GetExecutingAssembly().GetName().Version < UpdateManager.Instance.RemoteLauncherVersion)
+                    {
+                        var result = MessageBox.Show(
+                            "A newer version of TazUO Launcher is available, would you like to download the update?\nYou will need to unzip the file manually, but we will open the files required to do so for you.",
+                            "Update Available",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Information,
+                            MessageBoxResult.No
+                            );
+
+                        if(result == MessageBoxResult.Yes)
+                        {
+                            //Utility.Utility.OpenLauncherDownloadLink();
+                            UpdateManager.Instance.DownloadLauncher(OnDownloadProgress);
+                        }
+                    }
+                }
             });
 
             if (tuoInstalled)
