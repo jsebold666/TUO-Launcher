@@ -151,8 +151,11 @@ namespace TazUO_Launcher.Windows
                     {
                         selectedProfile.CUOSettings.SaveAccount = (bool)(EntrySavePass.IsChecked == null ? false : EntrySavePass.IsChecked);
                         selectedProfile.SaveAsync(EntrySavePass);
-                        EntryAccountName.Text = "";
-                        EntryAccountPass.Password = "";
+                        if (!selectedProfile.CUOSettings.SaveAccount)
+                        {
+                            EntryAccountName.Text = "";
+                            EntryAccountPass.Password = "";
+                        }
                     }
                 }
             };
