@@ -434,6 +434,12 @@ namespace TazUO_Launcher.Windows
             {
                 Profile copy = new Profile();
                 copy.OverrideSettings(selectedProfile.CUOSettings);
+
+                while(ProfileManager.TryFindProfile(copy.Name, out _))
+                {
+                    copy.Name += "x";
+                }
+
                 copy.Save();
 
                 ProfileList.Items.Add(new ListBoxItem() { Content = copy.Name });
@@ -458,7 +464,10 @@ namespace TazUO_Launcher.Windows
         private void ButtonNew_MouseUp(object sender, RoutedEventArgs e)
         {
             Profile profile = new Profile();
-            if()
+            while (ProfileManager.TryFindProfile(profile.Name, out _))
+            {
+                profile.Name += "x";
+            }
             profile.Save();
             ProfileList.Items.Add(new ListBoxItem() { Content = profile.Name });
             ProfileList.SelectedIndex = ProfileList.Items.Count - 1;
