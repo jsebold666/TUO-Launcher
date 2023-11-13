@@ -109,6 +109,10 @@ namespace TazUO_Launcher.Windows
                 {
                     if (!selectedProfile.Name.Equals(EntryProfileName.Text))
                     {
+                        while (File.Exists(EntryProfileName.Text))
+                        {
+                            EntryProfileName.Text += "x";
+                        }
                         ProfileManager.DeleteProfileFile(selectedProfile);
                         selectedProfile.Name = EntryProfileName.Text;
                         selectedProfile.SaveAsync(EntryProfileName);
