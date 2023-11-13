@@ -149,45 +149,6 @@ namespace TazUO_Launcher
             };
         }
 
-        private void PlayButtonMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-
-            if (Utility.Utility.FindTazUO())
-            {
-                if (ProfileSelector.SelectedIndex > -1 && !UpdateManager.Instance.DownloadInProgress)
-                {
-                    string tuoExecutable = Utility.Utility.GetTazUOExecutable();
-
-                    if (ProfileManager.TryFindProfile(((ComboBoxItem)ProfileSelector.SelectedItem).Content.ToString(), out Profile? profile))
-                    {
-                        try
-                        {
-                            var proc = new ProcessStartInfo(tuoExecutable, $"-settings \"{profile.GetSettingsFilePath()}\"");
-                            proc.Arguments += " -skipupdatecheck";
-                            if (profile.CUOSettings.AutoLogin && !string.IsNullOrEmpty(profile.LastCharacterName))
-                            {
-                                proc.Arguments += $" -lastcharactername {profile.LastCharacterName}";
-                            }
-                            if (profile.CUOSettings.AutoLogin)
-                            {
-                                proc.Arguments += " -skiploginscreen";
-                            }
-                            Process.Start(proc);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.ToString());
-                        }
-                    }
-                }
-            }
-            else
-            {
-                //Do update stuff here
-            }
-
-        }
-
         private void DiscordIconMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var destinationurl = "https://discord.gg/SqwtB5g95H";
@@ -256,6 +217,43 @@ namespace TazUO_Launcher
             {
                 NewsArea.Visibility = Visibility.Collapsed;
                 NewsAreaBorder.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void PlayButtonClicked(object sender, RoutedEventArgs e)
+        {
+            if (Utility.Utility.FindTazUO())
+            {
+                if (ProfileSelector.SelectedIndex > -1 && !UpdateManager.Instance.DownloadInProgress)
+                {
+                    string tuoExecutable = Utility.Utility.GetTazUOExecutable();
+
+                    if (ProfileManager.TryFindProfile(((ComboBoxItem)ProfileSelector.SelectedItem).Content.ToString(), out Profile? profile))
+                    {
+                        try
+                        {
+                            var proc = new ProcessStartInfo(tuoExecutable, $"-settings \"{profile.GetSettingsFilePath()}\"");
+                            proc.Arguments += " -skipupdatecheck";
+                            if (profile.CUOSettings.AutoLogin && !string.IsNullOrEmpty(profile.LastCharacterName))
+                            {
+                                proc.Arguments += $" -lastcharactername {profile.LastCharacterName}";
+                            }
+                            if (profile.CUOSettings.AutoLogin)
+                            {
+                                proc.Arguments += " -skiploginscreen";
+                            }
+                            Process.Start(proc);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //Do update stuff here
             }
         }
 

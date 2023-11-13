@@ -49,13 +49,13 @@
                   BorderBrush="DarkOrange" 
                   Canvas.Left="300"
                   Canvas.Top="255" 
-                  MaxWidth="180"
-                  Width="180"
+                  MaxWidth="170"
+                  Width="170"
                   >
 
         </ComboBox>
 
-        <materialIcons:MaterialIcon Kind="Settings" Foreground="DarkOrange" Background="Transparent" Canvas.Right="10" Canvas.Top="10" ToolTip="Profiles" MouseUp="ProfileSettingsButtonMouseUp">
+        <materialIcons:MaterialIcon Kind="Settings" Foreground="DarkOrange" Background="Transparent" Canvas.Left="475" Canvas.Top="255" ToolTip="Profiles" MouseUp="ProfileSettingsButtonMouseUp">
             <materialIcons:MaterialIcon.Style>
                 <Style TargetType="materialIcons:MaterialIcon">
                     <Style.Triggers>
@@ -71,31 +71,24 @@
             </materialIcons:MaterialIcon.Style>
         </materialIcons:MaterialIcon>
 
-        <materialIcons:MaterialIcon Kind="Login" Foreground="DarkOrange" Background="Transparent" ToolTip="Play!" MouseUp="PlayButtonMouseUp" Canvas.Left="480" Canvas.Top="254" HorizontalAlignment="Left" VerticalAlignment="Center">
-            <materialIcons:MaterialIcon.Style>
-                <Style TargetType="materialIcons:MaterialIcon">
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect ShadowDepth="2"/>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </materialIcons:MaterialIcon.Style>
-        </materialIcons:MaterialIcon>
+        <Button Width="200"            
+                Canvas.Left="300"           
+                Canvas.Top="285" 
+                Height="25"
+                Background="#D8202020"
+                Click="PlayButtonClicked"
+                >
+            Play</Button>
 
 
-        <Label Visibility="Hidden" Name="DownloadProgressLabel" Foreground="{DynamicResource SecondaryHueMidBrush}" Canvas.Left="330" Canvas.Top="303">Downloading an update..</Label>
+        <Label Visibility="Hidden" Name="DownloadProgressLabel" Foreground="{DynamicResource SecondaryHueMidBrush}" Canvas.Left="330" Canvas.Top="305">Downloading an update..</Label>
         <ProgressBar Visibility="Hidden" x:Name="DownloadProgressBar" Width="400" Height="15" Canvas.Left="200" Canvas.Top="330" Style="{DynamicResource MaterialDesignLinearProgressBar}" Maximum="100"/>
 
-        <Button x:Name="DownloadUpdateButton" Visibility="Hidden" Canvas.Bottom="65" Canvas.Left="315" Height="60" Width="150" Background="#D8202020" Click="DownloadButtonPressed">
+        <Button x:Name="DownloadUpdateButton" Visibility="Hidden" Canvas.Bottom="65" Canvas.Left="325" Height="60" Width="150" Background="#D8202020" Click="DownloadButtonPressed" HorizontalAlignment="Left" Canvas.Top="325" VerticalAlignment="Center">
             <TextBlock TextAlignment="Center">Update available<LineBreak/>Download now</TextBlock>
         </Button>
 
-        <Rectangle Name="VersionRectangle" Width="180" Height="55" Canvas.Bottom="5" Canvas.Left="300" Fill="#BF202020"></Rectangle>
+        <Rectangle Name="VersionRectangle" Width="180" Height="55" Canvas.Bottom="5" Canvas.Left="310" Fill="#BF202020" HorizontalAlignment="Left" Canvas.Top="390" VerticalAlignment="Center"></Rectangle>
         <Label Canvas.Left="{Binding (Canvas.Left),ElementName=VersionRectangle}" Canvas.Bottom="5" Content="{x:Static local:LauncherSettings.LauncherVersionString}" HorizontalContentAlignment="Center" Width="{Binding (Width),ElementName=VersionRectangle}" Foreground="DarkOrange"></Label>
         <Label Name="RemoteVersionText" Canvas.Left="{Binding (Canvas.Left),ElementName=VersionRectangle}" Canvas.Bottom="35" HorizontalContentAlignment="Center" Width="{Binding (Width),ElementName=VersionRectangle}"  Visibility="Hidden" Foreground="DarkOrange"></Label>
         <Label Name="LocalVersionText" Canvas.Left="{Binding (Canvas.Left),ElementName=VersionRectangle}" Canvas.Bottom="20" HorizontalContentAlignment="Center" Width="{Binding (Width),ElementName=VersionRectangle}"  Visibility="Hidden" Foreground="DarkOrange"></Label>
