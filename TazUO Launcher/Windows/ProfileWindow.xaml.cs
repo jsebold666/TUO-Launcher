@@ -109,7 +109,7 @@ namespace TazUO_Launcher.Windows
                 {
                     if (!selectedProfile.Name.Equals(EntryProfileName.Text))
                     {
-                        while (File.Exists(EntryProfileName.Text))
+                        while (ProfileManager.TryFindProfile(EntryProfileName.Text, out _))
                         {
                             EntryProfileName.Text += "x";
                         }
@@ -458,6 +458,7 @@ namespace TazUO_Launcher.Windows
         private void ButtonNew_MouseUp(object sender, RoutedEventArgs e)
         {
             Profile profile = new Profile();
+            if()
             profile.Save();
             ProfileList.Items.Add(new ListBoxItem() { Content = profile.Name });
             ProfileList.SelectedIndex = ProfileList.Items.Count - 1;
