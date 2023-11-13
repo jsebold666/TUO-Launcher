@@ -335,6 +335,15 @@ namespace TazUO_Launcher.Windows
                     }
                 }
             };
+
+            EntryAdditionalArgs.TextChanged += (s, e) =>
+            {
+                if(selectedProfile != null)
+                {
+                    selectedProfile.AdditionalArgs = EntryAdditionalArgs.Text;
+                    selectedProfile.SaveAsync(EntryAdditionalArgs);
+                }
+            };
         }
 
         /// <summary>

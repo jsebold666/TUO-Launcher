@@ -242,6 +242,10 @@ namespace TazUO_Launcher
                             {
                                 proc.Arguments += " -skiploginscreen";
                             }
+                            if (!string.IsNullOrEmpty(profile.AdditionalArgs))
+                            {
+                                proc.Arguments += " " + profile.AdditionalArgs;
+                            }
                             Process.Start(proc);
                         }
                         catch (Exception ex)

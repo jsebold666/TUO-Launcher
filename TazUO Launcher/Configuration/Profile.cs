@@ -20,6 +20,7 @@ namespace TazUO_Launcher
         public string Name { get; set; } = RandomWord.GenerateName(Random.Shared.Next(5, 20));
         public string SettingsFile { get; set; } = Guid.NewGuid().ToString();
         public string LastCharacterName { get; set; } = string.Empty;
+        public string AdditionalArgs { get; set; } = string.Empty;
 
         [JsonIgnore]
         public Settings CUOSettings

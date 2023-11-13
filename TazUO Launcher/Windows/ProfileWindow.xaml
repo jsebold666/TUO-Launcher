@@ -170,6 +170,8 @@
                         <Label Grid.Row="3">Auto login to char</Label>
                         <TextBox ToolTip="Character name to auto log in to." x:Name="EntryLastCharName" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></TextBox>
 
+                        <Label Grid.Row="4">Additional Args</Label>
+                        <TextBox x:Name="EntryAdditionalArgs" ToolTip="Addition args to send to TUO, ex: '-fps 120 -packetlog'" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,2,2,2" Padding="5" VerticalContentAlignment="Center" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Foreground="{DynamicResource SecondaryHueMidBrush}"></TextBox>
                     </Grid>
                 </TabItem>
             </TabControl>
