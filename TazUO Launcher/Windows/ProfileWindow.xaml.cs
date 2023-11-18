@@ -423,6 +423,7 @@ namespace TazUO_Launcher.Windows
             EntryMusicVolume.Value = profile.CUOSettings.LoginMusicVolume;
 
             EntryLastCharName.Text = profile.LastCharacterName;
+            EntryAdditionalArgs.Text = profile.AdditionalArgs;
         }
 
         private void ProfileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
