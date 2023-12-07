@@ -121,6 +121,7 @@
                 
                 <ContextMenu x:Name="ToolsMenu">
                     <MenuItem Header="Import Data folder" Click="ImportDataFolder"/>
+                    <MenuItem Header="Import ClassicUO Launcher profiles" Click="ImportClassicUOProfiles"/>
                 </ContextMenu>
             </materialIcons:MaterialIcon.ContextMenu>
         </materialIcons:MaterialIcon>

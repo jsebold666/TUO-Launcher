@@ -296,6 +296,29 @@ namespace TazUO_Launcher
             }
         }
 
+        private void ImportClassicUOProfiles(object sender, RoutedEventArgs e)
+        {
+            Utility.Utility.ImportCUOProfiles();
+
+            Task<Profile[]> getProfiles = ProfileManager.GetAllProfiles();
+
+            if (!getProfiles.IsCompleted) //This should be extremely fast
+            {
+                getProfiles.Wait();
+            }
+
+            allProfiles = getProfiles.Result;
+
+            ProfileSelector.Items.Clear();
+
+            foreach (Profile profile in allProfiles)
+            {
+                ProfileSelector.Items.Add(new ComboBoxItem() { Content = profile.Name, Foreground = new SolidColorBrush(Color.FromRgb(20, 20, 20)) });
+            }
+
+            ProfileSelector.SelectedIndex = LauncherSettings.LastSelectedProfileIndex;
+        }
+
         private void UpdateLocalVersion()
         {
             Version? l = UpdateManager.Instance.GetInstalledVersion(Utility.Utility.GetTazUOExecutable());

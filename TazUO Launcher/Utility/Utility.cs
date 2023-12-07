@@ -1,7 +1,9 @@
 ﻿using Microsoft.Win32;
+using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Threading;
+using System.Xml;
 
 namespace TazUO_Launcher.Utility
 {
@@ -13,7 +15,7 @@ namespace TazUO_Launcher.Utility
         {
             string tuoPath = Path.Combine(LauncherSettings.LauncherPath, "TazUO", "ClassicUO.exe");
 
-            if(File.Exists(tuoPath))
+            if (File.Exists(tuoPath))
             {
                 return true;
             }
@@ -54,7 +56,7 @@ namespace TazUO_Launcher.Utility
             if (folderBrowserDialog.ShowDialog() == true)
             {
                 return folderBrowserDialog.SelectedPath;
-            } 
+            }
             else
             {
                 return string.Empty;
@@ -107,6 +109,161 @@ namespace TazUO_Launcher.Utility
                     DirectoryCopy(subdir.FullName, temppath, copySubDirs);
                 }
             }
+        }
+
+        public static void ImportCUOProfiles()
+        {
+            string CUOPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ClassicUOLauncher", "launcher_settings.xml");
+            if (File.Exists(CUOPath))
+            {
+                try
+                {
+                    Profile newProfile = new Profile();
+
+                    while (ProfileManager.TryFindProfile(newProfile.Name, out _))
+                    {
+                        newProfile.Name += "x";
+                    }
+
+                    XmlDocument cuoLauncher = new XmlDocument();
+                    cuoLauncher.Load(CUOPath);
+
+                    XmlNode? root = cuoLauncher.DocumentElement;
+                   
+
+                    if (root != null)
+                    { 
+                        XmlNode? profiles = root["profiles"];
+                        if (profiles != null)
+                        {
+                            foreach (XmlNode profile in profiles.ChildNodes)
+                            {
+                                if (profile.Name == "profile")
+                                {
+                                    foreach (XmlAttribute attr in profile.Attributes)
+                                    {
+                                        switch (attr.Name)
+                                        {
+                                            case "name":
+                                                newProfile.Name = attr.Value;
+                                                while (ProfileManager.TryFindProfile(newProfile.Name, out _))
+                                                {
+                                                    newProfile.Name += "x";
+                                                }
+                                                break;
+                                            case "username":
+                                                newProfile.CUOSettings.Username = attr.Value;
+                                                break;
+                                            case "password":
+                                                newProfile.CUOSettings.Password = attr.Value;
+                                                break;
+                                            case "server":
+                                                newProfile.CUOSettings.IP = attr.Value;
+                                                break;
+                                            case "port":
+                                                if (ushort.TryParse(attr.Value, out ushort port))
+                                                {
+                                                    newProfile.CUOSettings.Port = port;
+                                                }
+                                                break;
+                                            case "charname":
+                                                newProfile.LastCharacterName = attr.Value;
+                                                break;
+                                            case "client_version":
+                                                newProfile.CUOSettings.ClientVersion = attr.Value;
+                                                break;
+                                            case "uopath":
+                                                newProfile.CUOSettings.UltimaOnlineDirectory = attr.Value;
+                                                break;
+                                            case "last_server_index":
+                                                if (ushort.TryParse(attr.Value, out ushort lserver))
+                                                {
+                                                    newProfile.CUOSettings.LastServerNum = lserver;
+
+                                                }
+                                                break;
+                                            case "last_server_name":
+                                                newProfile.CUOSettings.LastServerName = attr.Value;
+                                                break;
+                                            case "save_account":
+                                                if (bool.TryParse(attr.Value, out bool sacount))
+                                                {
+                                                    newProfile.CUOSettings.SaveAccount = sacount;
+                                                }
+                                                break;
+                                            case "autologin":
+                                                if (bool.TryParse(attr.Value, out bool autolog))
+                                                {
+                                                    newProfile.CUOSettings.AutoLogin = autolog;
+                                                }
+                                                break;
+                                            case "reconnect":
+                                                if (bool.TryParse(attr.Value, out bool recon))
+                                                {
+                                                    newProfile.CUOSettings.Reconnect = recon;
+                                                }
+                                                break;
+                                            case "reconnect_time":
+                                                if (int.TryParse(attr.Value, out int n))
+                                                {
+                                                    newProfile.CUOSettings.ReconnectTime = n;
+                                                }
+                                                break;
+                                            case "has_music":
+                                                if (bool.TryParse(attr.Value, out bool nn))
+                                                {
+                                                    newProfile.CUOSettings.LoginMusic = nn;
+                                                }
+                                                break;
+                                            case "use_verdata":
+                                                if (bool.TryParse(attr.Value, out bool nnn))
+                                                {
+                                                    newProfile.CUOSettings.UseVerdata = nnn;
+                                                }
+                                                break;
+                                            case "music_volume":
+                                                if (int.TryParse(attr.Value, out int nnnn))
+                                                {
+                                                    newProfile.CUOSettings.LoginMusicVolume = nnnn;
+                                                }
+                                                break;
+                                            case "encryption_type":
+                                                if (byte.TryParse(attr.Value, out byte nnnnn))
+                                                {
+                                                    newProfile.CUOSettings.Encryption = nnnnn;
+                                                }
+                                                break;
+                                            case "force_driver":
+                                                if (byte.TryParse(attr.Value, out byte nnnnnn))
+                                                {
+                                                    newProfile.CUOSettings.ForceDriver = nnnnnn;
+                                                }
+                                                break;
+                                            case "args":
+                                                newProfile.AdditionalArgs = attr.Value;
+                                                break;
+                                        }
+                                    }
+                                }
+                            }
+                            newProfile.Save();
+                            MessageBox.Show($"Imported {profiles.ChildNodes.Count} profiles from ClassicUO Launcher!");
+                            return;
+                        }
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Failed to import ClassicUO Launcher profiles.\n\n" + e.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Could not find any ClassicUO Launcher profiles to import.");
+            }
+
+            MessageBox.Show("Failed to import ClassicUO Launcher profiles.");
         }
     }
 }
