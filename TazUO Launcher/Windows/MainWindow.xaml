@@ -32,6 +32,7 @@
             Height="200"
             Canvas.Left="300" 
             Canvas.Top="40"
+            Opacity="0.55"
             >
             <Rectangle.Effect>
                 <DropShadowEffect/>
