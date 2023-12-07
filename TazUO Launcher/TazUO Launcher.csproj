@@ -15,6 +15,8 @@
     <PublishSingleFile>true</PublishSingleFile>
     <DebugType>embedded</DebugType>
     <RepositoryUrl>https://github.com/bittiez/TUO-Launcher</RepositoryUrl>
+    <PackageIcon>taz2.png</PackageIcon>
+    <ApplicationIcon>Resources\taz2.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +25,10 @@
     <None Remove="github-mark.png" />
     <None Remove="Resources\uo_bg.png" />
     <None Remove="taz2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\taz2.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +49,10 @@
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Resources\taz2.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 
