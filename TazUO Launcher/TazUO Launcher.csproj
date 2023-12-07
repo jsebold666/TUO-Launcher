@@ -6,7 +6,7 @@
     <RootNamespace>TazUO_Launcher</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <AssemblyVersion>1.7.1</AssemblyVersion>
+    <AssemblyVersion>1.8.0</AssemblyVersion>
     <FileVersion>1.7.1</FileVersion>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <SignAssembly>False</SignAssembly>
@@ -21,12 +21,14 @@
     <None Remove="BG.jpg" />
     <None Remove="discord-mark-blue.png" />
     <None Remove="github-mark.png" />
+    <None Remove="Resources\uo_bg.png" />
     <None Remove="taz2.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Material.Icons.WPF" Version="2.0.0" />
     <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+    <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +36,7 @@
     <Resource Include="Resources\discord-mark-blue.png" />
     <Resource Include="Resources\github-mark.png" />
     <Resource Include="Resources\taz2.png" />
+    <Resource Include="Resources\uo_bg.png" />
   </ItemGroup>
 
   <ItemGroup>
