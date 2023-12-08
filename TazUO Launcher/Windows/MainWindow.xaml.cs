@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Data.Common;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
-using System.Security.Cryptography.Xml;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Media;
 using TazUO_Launcher.Utility;
 using TazUO_Launcher.Windows;
@@ -261,9 +260,68 @@ namespace TazUO_Launcher
             }
         }
 
+        private void ImportDataFolder(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show(
+                "This will copy the contents of the folder you select into your TazUO Data folder.\n\n" +
+                "You need to select the Data folder of a CLASSICUO or TAZUO folder, NOT the Data folder of an official EA UO installation.\n\n" +
+                "The folder you are looking for should contain a Client and Profiles folder, select the Data folder containing these, not these sub-folders.\n\n" +
+                "!! Make sure your TazUO client is not running. !!\n\n" +
+                "Do you understand and want to continue?", "Warning", MessageBoxButton.YesNo)
+                ;
+
+            if (result == MessageBoxResult.Yes)
+            {
+                string folderPath = Utility.Utility.AskForFolder();
+
+                if(Directory.Exists(folderPath)) //Selected folder exists
+                {
+                    if (Directory.Exists(Path.Combine(folderPath, "Profiles"))) //Selected folder has a Profiles folder, more likely to be the correct folder
+                    {
+                        string tuoDir = Path.Combine(LauncherSettings.LauncherPath + "TazUO");
+                        if (Directory.Exists(tuoDir))
+                        {
+                            try
+                            {
+                                Utility.Utility.DirectoryCopy(folderPath, Path.Combine(tuoDir, "Data"));
+                                MessageBox.Show("Succesfully copied your data folder over.");
+                            }
+                            catch (Exception exception)
+                            {
+                                MessageBox.Show("There was an error while copying your files over\n\n" + exception.Message);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ImportClassicUOProfiles(object sender, RoutedEventArgs e)
+        {
+            Utility.Utility.ImportCUOProfiles();
+
+            Task<Profile[]> getProfiles = ProfileManager.GetAllProfiles();
+
+            if (!getProfiles.IsCompleted) //This should be extremely fast
+            {
+                getProfiles.Wait();
+            }
+
+            allProfiles = getProfiles.Result;
+
+            ProfileSelector.Items.Clear();
+
+            foreach (Profile profile in allProfiles)
+            {
+                ProfileSelector.Items.Add(new ComboBoxItem() { Content = profile.Name, Foreground = new SolidColorBrush(Color.FromRgb(20, 20, 20)) });
+            }
+
+            ProfileSelector.SelectedIndex = LauncherSettings.LastSelectedProfileIndex;
+        }
+
         private void UpdateLocalVersion()
         {
-            Version l = UpdateManager.Instance.GetInstalledVersion(Utility.Utility.GetTazUOExecutable());
+            Version? l = UpdateManager.Instance.GetInstalledVersion(Utility.Utility.GetTazUOExecutable());
             if (l != null)
             {
                 LocalVersionText.Content = $"Your TazUO version: {l.ToString(3)}";

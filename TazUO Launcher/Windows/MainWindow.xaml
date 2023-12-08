@@ -23,7 +23,7 @@
         </Style>
     </Window.Resources>
     <Canvas Width="800" Height="450">
-        <Image Source="/Resources/BG.jpg" Height="450" Width="800" Canvas.Right="0" Canvas.Bottom="0" RenderOptions.BitmapScalingMode="HighQuality"/>
+        <Image Source="/Resources/uo_bg.png" Height="450" Width="800" Canvas.Right="0" Canvas.Bottom="0" RenderOptions.BitmapScalingMode="HighQuality"/>
 
         <Rectangle 
             RadiusX="20"        
@@ -32,6 +32,7 @@
             Height="200"
             Canvas.Left="300" 
             Canvas.Top="40"
+            Opacity="0.55"
             >
             <Rectangle.Effect>
                 <DropShadowEffect/>
@@ -116,6 +117,16 @@
         </Label>
 
 
+        <materialIcons:MaterialIcon Kind="HammerScrewdriver" Canvas.Right="10" Canvas.Top="10" Foreground="DarkOrange" Background="Transparent">
+            <materialIcons:MaterialIcon.ContextMenu>
+                
+                <ContextMenu x:Name="ToolsMenu">
+                    <MenuItem Header="Import Data folder" Click="ImportDataFolder"/>
+                    <MenuItem Header="Import ClassicUO Launcher profiles" Click="ImportClassicUOProfiles"/>
+                </ContextMenu>
+            </materialIcons:MaterialIcon.ContextMenu>
+        </materialIcons:MaterialIcon>
+        
         <Image Source="/Resources/discord-mark-blue.png" Canvas.Right="10" RenderOptions.BitmapScalingMode="HighQuality" Canvas.Bottom="10" Height="20" ToolTip="Join our discord!" MouseUp="DiscordIconMouseUp">
             <Image.Style>
                 <Style TargetType="Image">
