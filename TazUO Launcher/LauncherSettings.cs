@@ -1,11 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TazUO_Launcher
 {
@@ -27,6 +23,8 @@ namespace TazUO_Launcher
         public static string ProfilesPath { get; set; } = Path.Combine(LauncherPath, "Profiles");
 
         public static string SettingsPath { get; set; } = Path.Combine(ProfilesPath, "Settings");
+
+        public static string TazUOPath { get; set; } = Path.Combine(LauncherPath, "TazUO");
 
         public static int LastSelectedProfileIndex
         {

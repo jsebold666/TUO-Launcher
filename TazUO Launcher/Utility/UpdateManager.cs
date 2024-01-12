@@ -4,8 +4,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Net.Http;
 using System.Reflection;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -76,7 +77,11 @@ namespace TazUO_Launcher.Utility
 
                 try
                 {
-                    ZipFile.ExtractToDirectory(tempFilePath, Path.Combine(LauncherSettings.LauncherPath, "TazUO"), true);
+                    Directory.CreateDirectory(LauncherSettings.TazUOPath);
+
+                    TrySetDirectoryFullPermissions(LauncherSettings.TazUOPath);
+
+                    ZipFile.ExtractToDirectory(tempFilePath, LauncherSettings.TazUOPath, true);
                 }
                 catch (Exception ex)
                 {
@@ -150,6 +155,23 @@ namespace TazUO_Launcher.Utility
             return download;
         }
 
+        public static void TrySetDirectoryFullPermissions(string path)
+        {
+            try
+            {
+                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                if (directoryInfo.Exists)
+                {
+                    DirectorySecurity security = directoryInfo.GetAccessControl();
+                    security.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), FileSystemRights.Modify, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
+                    directoryInfo.SetAccessControl(security);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
 
         public void GetRemoteVersionAsync(Action? onVersionFound = null)
         {
