@@ -123,6 +123,8 @@
                 <ContextMenu x:Name="ToolsMenu">
                     <MenuItem Header="Import Data folder" Click="ImportDataFolder"/>
                     <MenuItem Header="Import ClassicUO Launcher profiles" Click="ImportClassicUOProfiles"/>
+                    <MenuItem Header="Force download latest version" Click="ForceDownloadLatest"/>
+                    <MenuItem Header="Download latest bleeding edge build" Click="DownloadBleedingEdge"/>
                 </ContextMenu>
             </materialIcons:MaterialIcon.ContextMenu>
         </materialIcons:MaterialIcon>

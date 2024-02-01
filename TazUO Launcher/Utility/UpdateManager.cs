@@ -90,7 +90,6 @@ namespace TazUO_Launcher.Utility
 
                 afterCompleted?.Invoke();
                 DownloadInProgress = false;
-
             });
 
             return download;
@@ -155,6 +154,60 @@ namespace TazUO_Launcher.Utility
             return download;
         }
 
+        public Task DownloadLatestBleedingEdge(Action<int>? action = null, Action afterCompleted = null)
+        {
+            DownloadProgress downloadProgress = new DownloadProgress();
+
+            downloadProgress.DownloadProgressChanged += (s, e) =>
+            {
+                Utility.UIDispatcher.InvokeAsync(() =>
+                {
+                    action?.Invoke((int)(downloadProgress.ProgressPercentage * 100));
+                });
+            };
+
+            return Task.Factory.StartNew(() =>
+            {
+                string tempFilePath = Path.GetTempFileName();
+                using (var file = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    GitHubReleaseData bleedingEdgeData = GetReleaseData("https://api.github.com/repos/bittiez/TazUO/releases/tags/TazUO-BleedingEdge");
+
+                    if (bleedingEdgeData != null)
+                    {
+                        foreach (GitHubReleaseData.Asset asset in bleedingEdgeData.assets)
+                        {
+                            if (asset.name.EndsWith(".zip") && asset.name.StartsWith("WindowsTazUO"))
+                            {
+                                httpClient.DownloadAsync(asset.browser_download_url, file, downloadProgress).Wait();
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        afterCompleted?.Invoke();
+                        return;
+                    }
+                }
+
+                try
+                {
+                    Directory.CreateDirectory(LauncherSettings.TazUOPath);
+
+                    TrySetDirectoryFullPermissions(LauncherSettings.TazUOPath);
+
+                    ZipFile.ExtractToDirectory(tempFilePath, LauncherSettings.TazUOPath, true);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+
+                afterCompleted?.Invoke();
+            });
+        }
+
         public static void TrySetDirectoryFullPermissions(string path)
         {
             try
@@ -173,22 +226,11 @@ namespace TazUO_Launcher.Utility
             }
         }
 
-        public void GetRemoteVersionAsync(Action? onVersionFound = null)
+        public void GetRemoteVersionAsync(Action? onVersionFound = null, string url = "https://api.github.com/repos/bittiez/TazUO/releases/latest")
         {
             Task.Factory.StartNew(() =>
             {
-                HttpRequestMessage restApi = new HttpRequestMessage()
-                {
-                    Method = HttpMethod.Get,
-                    RequestUri = new Uri("https://api.github.com/repos/bittiez/TazUO/releases/latest"),
-                };
-                restApi.Headers.Add("X-GitHub-Api-Version", "2022-11-28");
-                restApi.Headers.Add("User-Agent", "Public");
-                string jsonResponse = httpClient.Send(restApi).Content.ReadAsStringAsync().Result;
-
-                Console.WriteLine(jsonResponse);
-
-                MainReleaseData = JsonSerializer.Deserialize<GitHubReleaseData>(jsonResponse);
+                MainReleaseData = GetReleaseData(url);
 
                 if (MainReleaseData != null)
                 {
@@ -207,6 +249,22 @@ namespace TazUO_Launcher.Utility
                     }
                 }
             });
+        }
+
+        private GitHubReleaseData GetReleaseData(string url)
+        {
+            HttpRequestMessage restApi = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(url),
+            };
+            restApi.Headers.Add("X-GitHub-Api-Version", "2022-11-28");
+            restApi.Headers.Add("User-Agent", "Public");
+            string jsonResponse = httpClient.Send(restApi).Content.ReadAsStringAsync().Result;
+
+            Console.WriteLine(jsonResponse);
+
+            return JsonSerializer.Deserialize<GitHubReleaseData>(jsonResponse);
         }
 
         public void GetRemoteLauncherVersionAsync(Action? onVersionFound = null)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -48,7 +47,7 @@ namespace TazUO_Launcher
                         tb.TextWrapping = TextWrapping.Wrap;
                         tb.Margin = new Thickness(5, 5, 5, 5);
                         tb.Text = UpdateManager.Instance.MainReleaseData.tag_name + " notes:\n" + UpdateManager.Instance.MainReleaseData.body;
-                        
+
                         NewsArea.Content = tb;
                     }
                 }
@@ -57,9 +56,9 @@ namespace TazUO_Launcher
 
             UpdateManager.Instance.GetRemoteLauncherVersionAsync(() =>
             {
-                if(UpdateManager.Instance.LauncherReleaseData != null)
+                if (UpdateManager.Instance.LauncherReleaseData != null)
                 {
-                    if(Assembly.GetExecutingAssembly().GetName().Version < UpdateManager.Instance.RemoteLauncherVersion)
+                    if (Assembly.GetExecutingAssembly().GetName().Version < UpdateManager.Instance.RemoteLauncherVersion)
                     {
                         var result = MessageBox.Show(
                             "A newer version of TazUO Launcher is available, would you like to download the update?\nYou will need to unzip the file manually, but we will open the files required to do so for you.",
@@ -69,7 +68,7 @@ namespace TazUO_Launcher
                             MessageBoxResult.No
                             );
 
-                        if(result == MessageBoxResult.Yes)
+                        if (result == MessageBoxResult.Yes)
                         {
                             //Utility.Utility.OpenLauncherDownloadLink();
                             UpdateManager.Instance.DownloadLauncher(OnDownloadProgress);
@@ -198,7 +197,7 @@ namespace TazUO_Launcher
                 DownloadProgressLabel.Visibility = Visibility.Visible;
             }
 
-            if (p == 100)
+            if (p >= 100)
             {
                 DownloadProgressBar.Visibility = Visibility.Hidden;
                 DownloadProgressLabel.Visibility = Visibility.Hidden;
@@ -274,7 +273,7 @@ namespace TazUO_Launcher
             {
                 string folderPath = Utility.Utility.AskForFolder();
 
-                if(Directory.Exists(folderPath)) //Selected folder exists
+                if (Directory.Exists(folderPath)) //Selected folder exists
                 {
                     if (Directory.Exists(Path.Combine(folderPath, "Profiles"))) //Selected folder has a Profiles folder, more likely to be the correct folder
                     {
@@ -317,6 +316,19 @@ namespace TazUO_Launcher
             }
 
             ProfileSelector.SelectedIndex = LauncherSettings.LastSelectedProfileIndex;
+        }
+
+        private void ForceDownloadLatest(object sender, RoutedEventArgs e)
+        {
+            DownloadButtonPressed(sender, e);
+        }
+
+        private void DownloadBleedingEdge(object sender, RoutedEventArgs e)
+        {
+            UpdateManager.Instance.DownloadLatestBleedingEdge(OnDownloadProgress, () =>
+            {
+                Utility.Utility.UIDispatcher.BeginInvoke(UpdateLocalVersion);
+            });
         }
 
         private void UpdateLocalVersion()

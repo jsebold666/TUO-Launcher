@@ -25,6 +25,10 @@ namespace TazUO_Launcher.Utility
 
         public static string GetTazUOExecutable()
         {
+            string exePath = Path.Combine(LauncherSettings.LauncherPath, "TazUO", "TazUO.exe");
+            if (File.Exists(exePath))
+                return exePath;
+
             return Path.Combine(LauncherSettings.LauncherPath, "TazUO", "ClassicUO.exe");
         }
 
@@ -129,10 +133,10 @@ namespace TazUO_Launcher.Utility
                     cuoLauncher.Load(CUOPath);
 
                     XmlNode? root = cuoLauncher.DocumentElement;
-                   
+
 
                     if (root != null)
-                    { 
+                    {
                         XmlNode? profiles = root["profiles"];
                         if (profiles != null)
                         {

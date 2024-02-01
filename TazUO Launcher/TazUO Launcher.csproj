@@ -38,7 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\BG.jpg" />
     <Resource Include="Resources\discord-mark-blue.png" />
     <Resource Include="Resources\github-mark.png" />
     <Resource Include="Resources\taz2.png" />
